@@ -25,6 +25,14 @@ The API is documented using [Swagger](https://swagger.io/).
 
 Finally, we deploy our app on [Heroku](https://www.heroku.com/) Cloud platform.
 
+
+## API Documentation
+
+The API is documented using OpenAPI/Swagger.
+
+The documentation can be browsed only at `http://localhost:5000/doc` once the server is running.
+
+
 ## Setup
 
 ### Installing Dependencies
@@ -104,13 +112,13 @@ The following roles are required:
 
 JWT Tokens needs to be stored in `auth.json`
 
-In order to generate the tokens... TODO: complete
+In order to generate the tokens... **TODO:** complete
 
 ```
 https://{{YOUR_DOMAIN}}/authorize?audience={{API_IDENTIFIER}}&response_type=token&client_id={{YOUR_CLIENT_ID}}&redirect_uri={{YOUR_CALLBACK_URI}}
 ```
 
-## Running The App Locally
+## Running Locally
 
 First, initialize and activate the virtual environment previously setup. 
 
@@ -132,7 +140,7 @@ Finally launch the server locally:
 (venv) flask run --reload --port 5000
 ```
 
-## Running Tests
+### Running Tests
 
 To run the tests, first load the testing database:
 
@@ -148,9 +156,10 @@ Then follow the same preliminary steps used to run the app locally, except that 
 (venv) python test_app.py
 ```
 
+## Hosting instructions
 
-## API Documentation
+Hosting at [Heroku](https://www.heroku.com/). Setting up and account and installing the heroku SDK is outside the scope of this README.
 
-The API is documented using OpenAPI/Swagger.
+This is an overview of the process...
 
-The documentation can be browsed only at `http://localhost:5000/doc` once the server is running.
+**TODO:** complete
