@@ -7,7 +7,7 @@ The objetive of this capstone project is to showcase the skills learned during t
 
 In particular, we are implementing a *backend* , thus involving  data modelling, API design, authentication/authorization and finally deployment on a cloud platform.
 
-The context of this application is "Casting Agency", an imaginary company that is responsible for creating movies and managing and assigning actors to those movies.  
+The context of this application is "Casting Agency", an imaginary company that is responsible for creating movies and managing and assigning actors to those movies.
 
 The idea is to create an API that allows manipulating the actors and movies database.
 
@@ -163,3 +163,5 @@ Hosting at [Heroku](https://www.heroku.com/). Setting up and account and install
 This is an overview of the process...
 
 **TODO:** complete
+
+
