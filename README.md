@@ -1,4 +1,4 @@
-# # FSND-Capstone
+# # FSND-Capstone - Casting Agency
 Capstone Project in the Udacity Full Stack NanoDegree program.
 
 ## Project Motivation
@@ -7,8 +7,11 @@ The objetive of this capstone project is to showcase the skills learned during t
 
 In particular, we are implementing a *backend* , thus involving  data modelling, API design, authentication/authorization and finally deployment on a cloud platform.
 
-The conext of this application is a "Casting Agency", a company that is responsible for creating movies and managing and assigning actors to those movies.  The idea is to create a create a system to simplify and streamline this process. 
-## Software Stack
+The context of this application is "Casting Agency", an imaginary company that is responsible for creating movies and managing and assigning actors to those movies.  
+
+The idea is to create an API that allows manipulating the actors and movies database.
+
+## Technology Stack
 
 The application is developed in Python, using the  [Flask](http://flask.pocoo.org/) framework. 
 
@@ -36,7 +39,7 @@ source venv/bin/activate
 Once the virtual environment is activated, the dependencies can be installed:
 
 ```bash
-(env) pip install -r requirements.txt
+(venv) pip install -r requirements.txt
 ```
 
 ### Database Setup
@@ -118,7 +121,7 @@ source venv/bin/activate
 Make sure the `DATABASE_URL` is properly set `setup.sh`
 
 ```bash
-source ./setup.sh 
+(venv) source ./setup.sh 
 ```
 
 Make sure the database is up and running.
@@ -126,7 +129,7 @@ Make sure the database is up and running.
 Finally launch the server locally:
 
 ```bash
-flask run --reload --port 5000
+(venv) flask run --reload --port 5000
 ```
 
 ## Running Tests
@@ -142,7 +145,7 @@ psql testdb < testdb.psql
 Then follow the same preliminary steps used to run the app locally, except that instead of running the flask app we run the test itself:
 
 ```bash
-python test_app.py
+(venv) python test_app.py
 ```
 
 
