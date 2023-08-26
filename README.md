@@ -156,7 +156,7 @@ Then follow the same preliminary steps used to run the app locally, except that 
 (venv) python test_app.py
 ```
 
-## Hosting instructions
+## Hosting Instructions
 
 Hosting at [Heroku](https://www.heroku.com/). Setting up and account and installing the heroku SDK is outside the scope of this README.
 
