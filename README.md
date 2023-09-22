@@ -13,7 +13,7 @@ The idea is to create an API that allows manipulating the actors and movies data
 
 ## Technology Stack
 
-The application is developed in Python, using the  [Flask](http://flask.pocoo.org/) framework. 
+The application is developed in Python 3.10.12, using the  [Flask](http://flask.pocoo.org/) framework. 
 
 The database system used is [PostgreSQL](https://www.postgresql.org/), along with [SQLAlchemy](https://www.sqlalchemy.org/) Object Relational Mapper (ORM).
 
@@ -52,7 +52,7 @@ Once the virtual environment is activated, the dependencies can be installed:
 
 ### Database Setup
 
-We assume a local postgres database is configured within a local machine. Installing and configuring the database is outside the scope of this README.
+We assume a local postgres database is configured and running within the local machine. Installing and configuring the database is outside the scope of this README.
 
 ### Auth0 Setup
 
@@ -132,7 +132,7 @@ Make sure the `DATABASE_URL` is properly set `setup.sh`
 (venv) source ./setup.sh 
 ```
 
-Make sure the database is up and running.
+**Please make sure the database is up and running.**
 
 Finally launch the server locally:
 

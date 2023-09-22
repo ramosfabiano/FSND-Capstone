@@ -11,15 +11,12 @@ def create_app(test_config=None):
 
     @app.route('/')
     def get_greeting():
-        excited = os.environ['EXCITED']
-        greeting = "Hello" 
-        if excited == 'true': 
-            greeting = greeting + "!!!!! You are doing great in this Udacity project."
+        greeting = "Hello!" 
         return greeting
 
     @app.route('/coolkids')
     def be_cool():
-        return "Be cool, man, be coooool! You're almost a FSND grad!"
+        return "Be cool, man, be coooool!"
 
     return app
 
