@@ -140,6 +140,25 @@ Finally launch the server locally:
 (venv) flask run --reload --port 5000
 ```
 
+## Handling database changes
+
+In order to handle changes in the ORM, the Flask migration mechanism is supported.
+
+First, initialize the migrations directory (needs to be done once):
+
+```bash
+(venv) flask db init
+```
+
+Next, create and apply a migration:
+
+```bash
+(venv) flask db migrate -m "optional message"
+(venv) flask db update
+```
+
+The create/appy procedure should then be repeated everytime the ORM changes in the app.
+
 ### Running Tests
 
 To run the tests, first load the testing database:
