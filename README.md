@@ -65,7 +65,7 @@ First, initialize the migrations directory (needs to be done once):
 Next, create and apply a migration:
 
 ```bash
-(venv) flask db migrate -m "optional message"
+(venv) flask db migrate -m "Initial migration"
 (venv) flask db upgrade
 ```
 
