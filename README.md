@@ -154,7 +154,7 @@ Next, create and apply a migration:
 
 ```bash
 (venv) flask db migrate -m "optional message"
-(venv) flask db update
+(venv) flask db upgrade
 ```
 
 The create/appy procedure should then be repeated everytime the ORM changes in the app.
