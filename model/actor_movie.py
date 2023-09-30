@@ -8,8 +8,8 @@ from  model import Base
 class ActorMovieAssociation(Base):
     __tablename__ = 'actor_movie_association'
 
-    actor_id = Column(Integer, ForeignKey('actor.id'), primary_key=True)
-    movie_id = Column(Integer, ForeignKey('movie.id'), primary_key=True)
+    actor_id = Column(Integer, ForeignKey('actor.id', ondelete='cascade'), primary_key=True)
+    movie_id = Column(Integer, ForeignKey('movie.id', ondelete='cascade'), primary_key=True)
         
     def __init__(self, actor_id, movie_id):
         """
