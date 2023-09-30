@@ -8,21 +8,23 @@ from  model import Base
 class Actor(Base):
     __tablename__ = 'actor'
 
-    id = Column(Integer, primary_key=True, unique=True)
-    name = Column(String, unique=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, unique=True)
     gender = Column(String, unique=False)
     birth_date = Column(Date, unique=False)
     email = Column(String, unique=False)
         
-    def __init__(self, id, name, gender, birth_date, email):
+    def __init__(self, name, gender, birth_date, email):
         """
         Initializes an actor.
 
         Arguments:
             name: actor's name.
             age: actor's age.
+            gender: actor's gender.
+            birth_date: actor's birth date.
+            email: actor's email.
         """
-        self.id  = id
         self.name = name
         self.gender = gender
         self.birth_date = birth_date

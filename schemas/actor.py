@@ -19,7 +19,6 @@ class ActorListSchema(BaseModel):
 class ActorAddSchema(BaseModel):
     """ Actor add schema.
     """
-    id: int
     name: str 
     gender: str
     birth_date: str
@@ -28,7 +27,7 @@ class ActorAddSchema(BaseModel):
 class ActorSearchSchema(BaseModel):
     """ Actor search schema.
     """
-    id: str
+    id: int
 
 class ActorPatchSchema(BaseModel):
     """ Actor patch schema.

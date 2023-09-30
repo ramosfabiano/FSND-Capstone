@@ -23,10 +23,17 @@ def setup_migrations(app):
 # Creates, initializes and runs the Flask application
 #
 def create_app(test_config=None):
+    
     # openapi setup
     info = Info(title="FSND-Capstone", version="1.0.0")
     app = OpenAPI(__name__, info=info)
-    
+
+    # openapi tags
+    home_tag = Tag(name="Documentation", description="OpenAPI documentation")
+    actors_tag = Tag(name="Actors", description="Actors API documentation")
+    directors_tag = Tag(name="Directors", description="Directors API documentation")
+    movies_tag = Tag(name="Movies", description="Movies API documentation")
+        
     # migrations
     setup_migrations(app)  
 
@@ -42,15 +49,9 @@ def create_app(test_config=None):
 
     # cross-origin resource sharing
     CORS(app, resources={r"/api/*": {"origins": "*"}})
-
-    # openapi tags
-    home_tag = Tag(name="Documentation", description="OpenAPI documentation")
-    actors_tag = Tag(name="Actors", description="Actors API documentation")
-    directors_tag = Tag(name="Directors", description="Directors API documentation")
-    movies_tag = Tag(name="Movies", description="Movies API documentation")
             
     #
-    # Endpoints (documentation)
+    # Actors
     #
     @app.get('/', tags=[home_tag])
     def home():
@@ -88,7 +89,7 @@ def create_app(test_config=None):
         """
         try:
             session = Session()
-            actor = Actor(id=form.id, name=form.name, gender=form.gender, birth_date=form.birth_date, email=form.email)
+            actor = Actor(name=form.name, gender=form.gender, birth_date=form.birth_date, email=form.email)
             session.add(actor)
             session.commit()
             return ActorRepresentation(actor), 200
@@ -106,7 +107,7 @@ def create_app(test_config=None):
         Arguments:
             form: actor's data.
         
-        Returns a representation of the deleted actor.
+        Returns a status message.
         """
         session = Session()
         actor = session.query(Actor).filter(Actor.id == form.id).first()
@@ -134,7 +135,6 @@ def create_app(test_config=None):
             error_msg = 'Actor not found.'
             return ErrorRepresentation(error_msg), 404
         else:
-            actor.id = form.id
             actor.name = form.name
             actor.gender = form.gender
             actor.birth_date = form.birth_date
@@ -147,9 +147,85 @@ def create_app(test_config=None):
                 return ErrorRepresentation(error_msg), 400
 
     #
-    # Endpoints (movies)
+    # Movies
     #
-    # TODO
+    @app.get('/api/v1/movies', tags=[movies_tag], responses={"200": MovieListSchema, "404": ErrorSchema})
+    def get_movies():
+        """Retrieves all movies.
+        
+        Returns a representation of the list of movies.
+        """
+        session = Session()
+        movies = session.query(Movie).all()
+        return MovieListRepresentation(movies), 200
+
+    @app.post('/api/v1/movie', tags=[movies_tag], responses={"200": MovieViewSchema, "409": ErrorSchema, "400": ErrorSchema})
+    def create_movie(form: MovieAddSchema):
+        """Creates a new movie.
+        
+        Arguments:
+            form: movie's data.
+        
+        Returns a representation of the created movie.
+        """
+        try:
+            session = Session()
+            movie = Movie(title=form.title, genre=form.genre, release_date=form.release_date)
+            session.add(movie)
+            session.commit()
+            return MovieRepresentation(movie), 200
+        except IntegrityError as e:
+            error_msg = 'Movie already exists.'
+            return ErrorRepresentation(error_msg), 409
+        except Exception as e:
+            logger.error(e)
+            error_msg = 'Error creating movie.'
+            return ErrorRepresentation(error_msg), 400
+
+    @app.delete('/api/v1/movie', tags=[movies_tag], responses={"200": ErrorSchema, "404": ErrorSchema})
+    def delete_movie(form: MovieSearchSchema):
+        """Deletes an movie.
+        
+        Arguments:
+            form: movie's data.
+        
+        Returns a status message.
+        """
+        session = Session()
+        movie = session.query(Movie).filter(Movie.id == form.id).first()
+        if movie is None:
+            error_msg = 'Movie not found.'
+            return ErrorRepresentation(error_msg), 404
+        else:
+            session.delete(movie)
+            session.commit()
+            error_msg = f'Movie successfuly deleted.'
+            return ErrorRepresentation(error_msg), 200
+        
+    @app.patch('/api/v1/movie', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "400": ErrorSchema})
+    def update_movie(form: MoviePatchSchema):
+        """Updates an movie.
+        
+        Arguments:
+            form: movie's data.
+        
+        Returns a representation of the updated movie.
+        """
+        session = Session()
+        movie = session.query(Movie).filter(Movie.id == form.id).first()
+        if movie is None:
+            error_msg = 'Movie not found.'
+            return ErrorRepresentation(error_msg), 404
+        else:
+            movie.title = form.title
+            movie.genre = form.genre
+            movie.release_date = form.release_date
+            try:
+                session.commit()
+                return MovieRepresentation(movie), 200
+            except Exception as e:
+                error_msg = 'Error patching movie.'
+                return ErrorRepresentation(error_msg), 400
 
 
     return app
