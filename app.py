@@ -4,18 +4,31 @@ from flask import Flask
 from flask_cors import CORS
 from flask import redirect
 from sqlalchemy.exc import IntegrityError
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate 
 import logging
 
-from model import Session, Actor
+from model import Session, Actor, database_path
 from schemas import *
 
+#
+# Allows the application to run database migrations
+#
+def setup_migrations(app):
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_path  
+    db = SQLAlchemy(app)
+    migrate = Migrate(app, db)  
+    
 #
 # Creates, initializes and runs the Flask application
 #
 def create_app(test_config=None):
-
+    # openapi setup
     info = Info(title="FSND-Capstone", version="1.0.0")
     app = OpenAPI(__name__, info=info)
+    
+    # migrations
+    setup_migrations(app)  
 
     # avoid alphabetic ordering of the schema attributes in the documentation.
     app.json.sort_keys = False
@@ -25,7 +38,7 @@ def create_app(test_config=None):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
    
-    logger.info('Starting the application...')
+    #logger.info('Starting the application...')
 
     # cross-origin resource sharing
     CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -145,10 +158,15 @@ def create_app(test_config=None):
 
 
     return app
+ 
 
 #
-# Main program
+# App instance
+# 
+app = create_app()
+ 
 #
+# Main program
+# 
 if __name__ == '__main__':
-    app = create_app()
     app.run()
