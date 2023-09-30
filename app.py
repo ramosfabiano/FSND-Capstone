@@ -88,7 +88,7 @@ def create_app(test_config=None):
         """
         try:
             session = Session()
-            actor = Actor(id=form.id, name=form.name, age=form.age, email=form.email)
+            actor = Actor(id=form.id, name=form.name, gender=form.gender, birth_date=form.birth_date, email=form.email)
             session.add(actor)
             session.commit()
             return ActorRepresentation(actor), 200
@@ -136,7 +136,8 @@ def create_app(test_config=None):
         else:
             actor.id = form.id
             actor.name = form.name
-            actor.age = form.age
+            actor.gender = form.gender
+            actor.birth_date = form.birth_date
             actor.email = form.email
             try:
                 session.commit()
@@ -144,12 +145,6 @@ def create_app(test_config=None):
             except Exception as e:
                 error_msg = 'Error patching actor.'
                 return ErrorRepresentation(error_msg), 400
-
-    #
-    # Endpoints (directors)
-    #
-    # TODO
-
 
     #
     # Endpoints (movies)

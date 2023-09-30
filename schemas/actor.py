@@ -7,7 +7,8 @@ class ActorViewSchema(BaseModel):
     """
     id: int 
     name: str 
-    age: int
+    gender: str
+    birth_date: str
     email: str
 
 class ActorListSchema(BaseModel):
@@ -20,7 +21,8 @@ class ActorAddSchema(BaseModel):
     """
     id: int
     name: str 
-    age: int
+    gender: str
+    birth_date: str
     email: str
 
 class ActorSearchSchema(BaseModel):
@@ -33,7 +35,8 @@ class ActorPatchSchema(BaseModel):
     """
     id: int
     name: str 
-    age: int  
+    gender: str
+    birth_date: str 
     email: str  
     
 def ActorRepresentation(actor: Actor):
@@ -42,7 +45,8 @@ def ActorRepresentation(actor: Actor):
     return {
         "id": actor.id,
         "name": actor.name,
-        "age": actor.age,
+        "gender": actor.gender,
+        "birth_date": actor.birth_date,
         "email": actor.email
     }
 
