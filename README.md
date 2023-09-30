@@ -118,6 +118,25 @@ In order to generate the tokens... **TODO:** complete
 https://{{YOUR_DOMAIN}}/authorize?audience={{API_IDENTIFIER}}&response_type=token&client_id={{YOUR_CLIENT_ID}}&redirect_uri={{YOUR_CALLBACK_URI}}
 ```
 
+## Handling database changes
+
+In order to handle changes in the ORM, the Flask migration mechanism is supported.
+
+First, initialize the migrations directory (needs to be done once):
+
+```bash
+(venv) flask db init
+```
+
+Next, create and apply a migration:
+
+```bash
+(venv) flask db migrate -m "optional message"
+(venv) flask db upgrade
+```
+
+The create/appy procedure should then be repeated everytime the ORM changes in the app.
+
 ## Running Locally
 
 First, initialize and activate the virtual environment previously setup. 
@@ -140,24 +159,7 @@ Finally launch the server locally:
 (venv) flask run --reload --port 5000
 ```
 
-## Handling database changes
 
-In order to handle changes in the ORM, the Flask migration mechanism is supported.
-
-First, initialize the migrations directory (needs to be done once):
-
-```bash
-(venv) flask db init
-```
-
-Next, create and apply a migration:
-
-```bash
-(venv) flask db migrate -m "optional message"
-(venv) flask db upgrade
-```
-
-The create/appy procedure should then be repeated everytime the ORM changes in the app.
 
 ### Running Tests
 
