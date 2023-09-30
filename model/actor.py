@@ -13,7 +13,7 @@ class Actor(Base):
     gender = Column(String, unique=False)
     birth_date = Column(Date, unique=False)
     email = Column(String, unique=False)
-    #movies = relationship('Movie', secondary='actor_movie_association', back_populates='actors')
+    movies = relationship('Movie', secondary='actor_movie_association', back_populates='actors')
             
     def __init__(self, name, gender, birth_date, email):
         """
