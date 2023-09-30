@@ -52,7 +52,24 @@ Once the virtual environment is activated, the dependencies can be installed:
 
 ### Database Setup
 
-We assume a local postgres database is configured and running within the local machine. Installing and configuring the database is outside the scope of this README.
+We assume a local postgres database server is configured and running within the local machine. 
+
+In order to handle changes in the ORM, the Flask migration mechanism is supported.
+
+First, initialize the migrations directory (needs to be done once):
+
+```bash
+(venv) flask db init
+```
+
+Next, create and apply a migration:
+
+```bash
+(venv) flask db migrate -m "optional message"
+(venv) flask db upgrade
+```
+
+The create/appy procedure should then be repeated everytime the ORM changes in the app.
 
 ### Auth0 Setup
 
@@ -117,25 +134,6 @@ In order to generate the tokens... **TODO:** complete
 ```
 https://{{YOUR_DOMAIN}}/authorize?audience={{API_IDENTIFIER}}&response_type=token&client_id={{YOUR_CLIENT_ID}}&redirect_uri={{YOUR_CALLBACK_URI}}
 ```
-
-## Handling database changes
-
-In order to handle changes in the ORM, the Flask migration mechanism is supported.
-
-First, initialize the migrations directory (needs to be done once):
-
-```bash
-(venv) flask db init
-```
-
-Next, create and apply a migration:
-
-```bash
-(venv) flask db migrate -m "optional message"
-(venv) flask db upgrade
-```
-
-The create/appy procedure should then be repeated everytime the ORM changes in the app.
 
 ## Running Locally
 
