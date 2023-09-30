@@ -14,7 +14,7 @@ if database_path.startswith("postgres://"):
   database_path = database_path.replace("postgres://", "postgresql://", 1)
   
 # Creates a PostgreSQL database engine
-engine = create_engine(database_path, echo=True)
+engine = create_engine(database_path, echo=True) #TODO: make echo=False
 
 # Initializes the database
 Session = sessionmaker(bind=engine)
