@@ -53,5 +53,5 @@ def ActorListRepresentation(actors: List[Actor]):
     """ Returns the representation of a list of actors.
     """
     return {
-        "actors": [ActorRepresentation(actor) for actor in actors]
+        "actors": [ActorRepresentation(a) for a in actors]
     }

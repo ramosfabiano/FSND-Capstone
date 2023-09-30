@@ -5,6 +5,7 @@ import os
 from model.base import Base
 from model.actor import Actor
 from model.movie import Movie
+from model.actor_movie import ActorMovieAssociation
 
 
 # Reads the database path from the environment
