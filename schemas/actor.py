@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 from model.actor import Actor
+from flask import jsonify
 
 class ActorViewSchema(BaseModel):
     """ Actor schema.
@@ -46,7 +47,8 @@ def ActorRepresentation(actor: Actor):
         "name": actor.name,
         "gender": actor.gender,
         "birth_date": actor.birth_date,
-        "email": actor.email
+        "email": actor.email,
+        "movies": [[m.id, m.title] for m in actor.movies]
     }
 
 def ActorListRepresentation(actors: List[Actor]):

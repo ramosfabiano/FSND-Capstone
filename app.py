@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_sqlalchemy import SQLAlchemy
 import logging
 
-from model import Session, Actor, Movie, ActorMovieAssociation, database_path
+from model import Session, Actor, Movie, database_path
 from schemas import *
 
     
@@ -34,7 +34,7 @@ def create_app(test_config=None):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
    
-    #logger.info('Starting the application...')
+    logger.info('Starting the application...')
 
     # cross-origin resource sharing
     CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -46,13 +46,13 @@ def create_app(test_config=None):
     def home():
         """Redirects to documentation page.
         """
-        return redirect('/openapi')
+        return redirect('/openapi/swagger')
 
     @app.get('/api/v1', tags=[home_tag])
     def v1_home():
         """Redirects to documentation page.
         """
-        return redirect('/openapi')
+        return redirect('/openapi/swagger')
 
     #
     # Endpoints (actors)
@@ -86,6 +86,7 @@ def create_app(test_config=None):
             error_msg = 'Actor already exists.'
             return ErrorRepresentation(error_msg), 409
         except Exception as e:
+            logger.error(e)
             error_msg = 'Error creating actor.'
             return ErrorRepresentation(error_msg), 400
 
@@ -132,6 +133,7 @@ def create_app(test_config=None):
                 session.commit()
                 return ActorRepresentation(actor), 200
             except Exception as e:
+                logger.error(e)
                 error_msg = 'Error patching actor.'
                 return ErrorRepresentation(error_msg), 400
 
@@ -213,52 +215,39 @@ def create_app(test_config=None):
                 session.commit()
                 return MovieRepresentation(movie), 200
             except Exception as e:
+                logger.error(e)
                 error_msg = 'Error patching movie.'
                 return ErrorRepresentation(error_msg), 400
 
 
     #
     # Actor-Movie Association
-    #
-    @app.get('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ActorMovieListSchema, "404": ErrorSchema})
-    def get_associations():
-        """Retrieves all actor-movie associations.
-        
-        Returns a representation of the list of associations.
-        """
-        session = Session()
-        associations = session.query(ActorMovieAssociation).all()
-        return ActorMovieListRepresentation(associations), 200
-        
-    @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ActorMovieViewSchema, "409": ErrorSchema, "400": ErrorSchema})
-    def create_association(form: ActorMovieAddSchema):
+    # 
+    @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ErrorSchema, "400": ErrorSchema})
+    def create_association(form: ActorMovieSchema):
         """Creates a new actor-movie association.
         
         Arguments:
             form: actor's and movie's id.
         
-        Returns a representation of the created association.
+        Returns a status message.
         """
         try:
             session = Session()
-            association = session.query(ActorMovieAssociation).filter(ActorMovieAssociation.actor_id == form.actor_id, ActorMovieAssociation.movie_id == form.movie_id).first()
-            if association is not None:
-                error_msg = 'Association already exists.'
-                return ErrorRepresentation(error_msg), 409                    
-            association = ActorMovieAssociation(actor_id=form.actor_id, movie_id=form.movie_id)
-            session.add(association)
+            actor = session.query(Actor).filter(Actor.id == form.actor_id).first()
+            movie = session.query(Movie).filter(Movie.id == form.movie_id).first()
+            actor.movies.append(movie)
+            #movie.actors.append(actor)
             session.commit()
-            return ActorMovieRepresentation(association), 200
-        except IntegrityError as e:
             error_msg = 'Invalid actor / movies ids provided.'
-            return ErrorRepresentation(error_msg), 409
+            return ErrorRepresentation('Actor-Movie assocation sucessfully created'), 200                        
         except Exception as e:
             logger.error(e)
             error_msg = 'Error creating association.'
             return ErrorRepresentation(error_msg), 400
 
     @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ErrorSchema, "404": ErrorSchema})
-    def delete_association(form: ActorMovieSearchSchema):
+    def delete_association(form: ActorMovieSchema):
         """Deletes an actor-movie association.
         
         Arguments:
@@ -266,18 +255,20 @@ def create_app(test_config=None):
         
         Returns a status message.
         """
-        session = Session()
-        association = session.query(ActorMovieAssociation).filter(ActorMovieAssociation.actor_id == form.actor_id, ActorMovieAssociation.movie_id == form.movie_id).first()
-        if association is None:
-            error_msg = 'Association not found.'
-            return ErrorRepresentation(error_msg), 404
-        else:
-            session.delete(association)
+        try:
+            session = Session()
+            actor = session.query(Actor).filter(Actor.id == form.actor_id).first()
+            movie = session.query(Movie).filter(Movie.id == form.movie_id).first()      
+            actor.movies.remove(movie)
+            #movie.actors.remove(actor) 
             session.commit()
             error_msg = f'Association successfuly deleted.'
-            return ErrorRepresentation(error_msg), 200
-
-
+            return ErrorRepresentation(error_msg), 200   
+        except Exception as e:
+            logger.error(e)
+            error_msg = 'Error deleting association.'
+            return ErrorRepresentation(error_msg), 400                      
+    
     return app
  
 

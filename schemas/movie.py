@@ -36,17 +36,18 @@ class MoviePatchSchema(BaseModel):
     release_date: str
     
 def MovieRepresentation(movie: Movie):
-    """ Returns the representation of an Movie.
+    """ Returns the representation of a movie.
     """
     return {
         "id": movie.id,
         "title": movie.title,
         "genre": movie.genre,
-        "release_date": movie.release_date
+        "release_date": movie.release_date,
+        "actors": [[a.id, a.name] for a in movie.actors]
     }
 
 def MovieListRepresentation(movies: List[Movie]):
-    """ Returns the representation of a list of Movies.
+    """ Returns the representation of a list of movies.
     """
     return {
         "movies": [MovieRepresentation(m) for m in movies]
