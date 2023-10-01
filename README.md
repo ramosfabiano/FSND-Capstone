@@ -30,7 +30,7 @@ Finally, we deploy our app on [Heroku](https://www.heroku.com/) Cloud platform.
 
 The API is documented using OpenAPI/Swagger.
 
-The documentation can be browsed only at `http://localhost:5000/doc` once the server is running.
+The documentation can be browsed only at `http://localhost:5000/` or `http://localhost:5000/openapi` once the server is running.
 
 ![Screenshot](images/openapi.png)
 
