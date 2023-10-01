@@ -32,6 +32,7 @@ The API is documented using OpenAPI/Swagger.
 
 The documentation can be browsed only at `http://localhost:5000/doc` once the server is running.
 
+![Screenshot](images/openapi.png)
 
 ## Setup
 
@@ -53,23 +54,6 @@ Once the virtual environment is activated, the dependencies can be installed:
 ### Database Setup
 
 We assume a local postgres database server is configured and running within the local machine. 
-
-In order to handle changes in the ORM, the Flask migration mechanism is supported.
-
-First, initialize the migrations directory (needs to be done once):
-
-```bash
-(venv) flask db init
-```
-
-Next, create and apply a migration:
-
-```bash
-(venv) flask db migrate -m "Initial migration"
-(venv) flask db upgrade
-```
-
-The create/appy procedure should then be repeated everytime the ORM changes in the app.
 
 ### Auth0 Setup
 
@@ -156,8 +140,6 @@ Finally launch the server locally:
 ```bash
 (venv) flask run --reload --port 5000
 ```
-
-
 
 ### Running Tests
 

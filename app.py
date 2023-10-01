@@ -5,19 +5,11 @@ from flask_cors import CORS
 from flask import redirect
 from sqlalchemy.exc import IntegrityError
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate 
 import logging
 
 from model import Session, Actor, Movie, ActorMovieAssociation, database_path
 from schemas import *
 
-#
-# Allows the application to run database migrations
-#
-def setup_migrations(app):
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_path  
-    db = SQLAlchemy(app)
-    migrate = Migrate(app, db)  
     
 #
 # Creates, initializes and runs the Flask application
@@ -34,9 +26,6 @@ def create_app(test_config=None):
     movies_tag = Tag(name="Movies", description="Movies API documentation")
     actor_movies_tag = Tag(name="Actor-Movies", description="Actor-Movies Association API documentation")
         
-    # migrations
-    setup_migrations(app)  
-
     # avoid alphabetic ordering of the schema attributes in the documentation.
     app.json.sort_keys = False
 
