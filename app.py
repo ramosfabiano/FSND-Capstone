@@ -1,6 +1,6 @@
 import os
 from flask_openapi3 import OpenAPI, Info, Tag
-from flask import Flask
+from flask import Flask, abort
 from flask_cors import CORS
 from flask import redirect
 from sqlalchemy.exc import IntegrityError
@@ -10,7 +10,6 @@ import logging
 from model import Session, Actor, Movie, database_path
 from schemas import *
 
-    
 #
 # Creates, initializes and runs the Flask application
 #
@@ -57,7 +56,7 @@ def create_app(test_config=None):
     #
     # Endpoints (actors)
     #
-    @app.get('/api/v1/actors', tags=[actors_tag], responses={"200": ActorListSchema, "404": ErrorSchema})
+    @app.get('/api/v1/actors', tags=[actors_tag], responses={"200": ActorListSchema})
     def get_actors():
         """Retrieves all actors.
         
@@ -67,7 +66,7 @@ def create_app(test_config=None):
         actors = session.query(Actor).all()
         return ActorListRepresentation(actors), 200
 
-    @app.post('/api/v1/actor', tags=[actors_tag], responses={"200": ActorViewSchema, "409": ErrorSchema, "400": ErrorSchema})
+    @app.post('/api/v1/actor', tags=[actors_tag], responses={"200": ActorViewSchema, "422": ErrorSchema})
     def create_actor(form: ActorAddSchema):
         """Creates a new actor.
         
@@ -82,15 +81,11 @@ def create_app(test_config=None):
             session.add(actor)
             session.commit()
             return ActorRepresentation(actor), 200
-        except IntegrityError as e:
-            error_msg = 'Actor already exists.'
-            return ErrorRepresentation(error_msg), 409
         except Exception as e:
             logger.error(e)
-            error_msg = 'Error creating actor.'
-            return ErrorRepresentation(error_msg), 400
+            abort(422)
 
-    @app.delete('/api/v1/actor', tags=[actors_tag], responses={"200": ErrorSchema, "404": ErrorSchema})
+    @app.delete('/api/v1/actor', tags=[actors_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema})
     def delete_actor(form: ActorSearchSchema):
         """Deletes an actor.
         
@@ -102,15 +97,17 @@ def create_app(test_config=None):
         session = Session()
         actor = session.query(Actor).filter(Actor.id == form.id).first()
         if actor is None:
-            error_msg = 'Actor not found.'
-            return ErrorRepresentation(error_msg), 404
+            abort(404)
         else:
-            session.delete(actor)
-            session.commit()
-            error_msg = f'Actor successfuly deleted.'
-            return ErrorRepresentation(error_msg), 200
-        
-    @app.patch('/api/v1/actor', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "400": ErrorSchema})
+            try:
+                session.delete(actor)
+                session.commit()
+                return SuccessRepresentation(), 200
+            except Exception as e:
+                logger.error(e)
+                abort(422)
+
+    @app.patch('/api/v1/actor', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema})
     def update_actor(form: ActorPatchSchema):
         """Updates an actor.
         
@@ -122,25 +119,23 @@ def create_app(test_config=None):
         session = Session()
         actor = session.query(Actor).filter(Actor.id == form.id).first()
         if actor is None:
-            error_msg = 'Actor not found.'
-            return ErrorRepresentation(error_msg), 404
+            abort(404)
         else:
-            actor.name = form.name
-            actor.gender = form.gender
-            actor.birth_date = form.birth_date
-            actor.email = form.email
             try:
+                actor.name = form.name
+                actor.gender = form.gender
+                actor.birth_date = form.birth_date
+                actor.email = form.email
                 session.commit()
                 return ActorRepresentation(actor), 200
             except Exception as e:
                 logger.error(e)
-                error_msg = 'Error patching actor.'
-                return ErrorRepresentation(error_msg), 400
+                abort(422)
 
     #
     # Movies
     #
-    @app.get('/api/v1/movies', tags=[movies_tag], responses={"200": MovieListSchema, "404": ErrorSchema})
+    @app.get('/api/v1/movies', tags=[movies_tag], responses={"200": MovieListSchema})
     def get_movies():
         """Retrieves all movies.
         
@@ -150,7 +145,7 @@ def create_app(test_config=None):
         movies = session.query(Movie).all()
         return MovieListRepresentation(movies), 200
 
-    @app.post('/api/v1/movie', tags=[movies_tag], responses={"200": MovieViewSchema, "409": ErrorSchema, "400": ErrorSchema})
+    @app.post('/api/v1/movie', tags=[movies_tag], responses={"200": MovieViewSchema, "422": ErrorSchema})
     def create_movie(form: MovieAddSchema):
         """Creates a new movie.
         
@@ -165,15 +160,11 @@ def create_app(test_config=None):
             session.add(movie)
             session.commit()
             return MovieRepresentation(movie), 200
-        except IntegrityError as e:
-            error_msg = 'Movie already exists.'
-            return ErrorRepresentation(error_msg), 409
         except Exception as e:
             logger.error(e)
-            error_msg = 'Error creating movie.'
-            return ErrorRepresentation(error_msg), 400
+            abort(422)
 
-    @app.delete('/api/v1/movie', tags=[movies_tag], responses={"200": ErrorSchema, "404": ErrorSchema})
+    @app.delete('/api/v1/movie', tags=[movies_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema})
     def delete_movie(form: MovieSearchSchema):
         """Deletes an movie.
         
@@ -185,15 +176,17 @@ def create_app(test_config=None):
         session = Session()
         movie = session.query(Movie).filter(Movie.id == form.id).first()
         if movie is None:
-            error_msg = 'Movie not found.'
-            return ErrorRepresentation(error_msg), 404
+            abort(404)
         else:
-            session.delete(movie)
-            session.commit()
-            error_msg = f'Movie successfuly deleted.'
-            return ErrorRepresentation(error_msg), 200
-        
-    @app.patch('/api/v1/movie', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "400": ErrorSchema})
+            try:
+                session.delete(movie)
+                session.commit()
+                return SuccessRepresentation(), 200
+            except Exception as e:
+                logger.error(e)
+                abort(422)
+
+    @app.patch('/api/v1/movie', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema})
     def update_movie(form: MoviePatchSchema):
         """Updates an movie.
         
@@ -205,25 +198,22 @@ def create_app(test_config=None):
         session = Session()
         movie = session.query(Movie).filter(Movie.id == form.id).first()
         if movie is None:
-            error_msg = 'Movie not found.'
-            return ErrorRepresentation(error_msg), 404
+            abort(404)
         else:
-            movie.title = form.title
-            movie.genre = form.genre
-            movie.release_date = form.release_date
             try:
+                movie.title = form.title
+                movie.genre = form.genre
+                movie.release_date = form.release_date
                 session.commit()
                 return MovieRepresentation(movie), 200
             except Exception as e:
                 logger.error(e)
-                error_msg = 'Error patching movie.'
-                return ErrorRepresentation(error_msg), 400
-
+                abort(422) 
 
     #
     # Actor-Movie Association
     # 
-    @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ErrorSchema, "400": ErrorSchema})
+    @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema})
     def create_association(form: ActorMovieSchema):
         """Creates a new actor-movie association.
         
@@ -239,14 +229,12 @@ def create_app(test_config=None):
             actor.movies.append(movie)
             #movie.actors.append(actor)
             session.commit()
-            error_msg = 'Invalid actor / movies ids provided.'
-            return ErrorRepresentation('Actor-Movie assocation sucessfully created'), 200                        
+            return SuccessRepresentation(), 200
         except Exception as e:
             logger.error(e)
-            error_msg = 'Error creating association.'
-            return ErrorRepresentation(error_msg), 400
+            abort(422)
 
-    @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ErrorSchema, "404": ErrorSchema})
+    @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema})
     def delete_association(form: ActorMovieSchema):
         """Deletes an actor-movie association.
         
@@ -262,13 +250,11 @@ def create_app(test_config=None):
             actor.movies.remove(movie)
             #movie.actors.remove(actor) 
             session.commit()
-            error_msg = f'Association successfuly deleted.'
-            return ErrorRepresentation(error_msg), 200   
+            return SuccessRepresentation(), 200
         except Exception as e:
             logger.error(e)
-            error_msg = 'Error deleting association.'
-            return ErrorRepresentation(error_msg), 400                      
-    
+            abort(422)
+
     return app
  
 
@@ -276,6 +262,25 @@ def create_app(test_config=None):
 # App instance
 # 
 app = create_app()
+
+#
+# Error handlers
+#
+@app.errorhandler(400)
+def bad_request(error):
+    return ErrorRepresentation('Bad request.'), 400
+
+@app.errorhandler(404)
+def not_found(error):
+    return ErrorRepresentation('Resource not found.'), 404
+
+@app.errorhandler(422)
+def unprocessable(error):
+    return ErrorRepresentation('Processing of request failed.'), 422
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return ErrorRepresentation('Internal server error.'), 500
  
 #
 # Main program
