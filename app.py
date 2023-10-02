@@ -66,7 +66,7 @@ def create_app(test_config=None):
         actors = session.query(Actor).all()
         return ActorListRepresentation(actors), 200
 
-    @app.post('/api/v1/actor', tags=[actors_tag], responses={"200": ActorViewSchema, "422": ErrorSchema})
+    @app.post('/api/v1/actors', tags=[actors_tag], responses={"200": ActorViewSchema, "422": ErrorSchema})
     def create_actor(form: ActorAddSchema):
         """Creates a new actor.
         
@@ -84,18 +84,18 @@ def create_app(test_config=None):
         except Exception as e:
             logger.error(e)
             abort(422)
-
-    @app.delete('/api/v1/actor', tags=[actors_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema})
-    def delete_actor(form: ActorSearchSchema):
+        
+    @app.delete('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema})
+    def delete_actor(path: ActorPathSchema):
         """Deletes an actor.
         
         Arguments:
-            form: actor's data.
+            id: the actor's id.
         
         Returns a status message.
         """
         session = Session()
-        actor = session.query(Actor).filter(Actor.id == form.id).first()
+        actor = session.query(Actor).filter(Actor.id == path.id).first()
         if actor is None:
             abort(404)
         else:
@@ -107,17 +107,18 @@ def create_app(test_config=None):
                 logger.error(e)
                 abort(422)
 
-    @app.patch('/api/v1/actor', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema})
-    def update_actor(form: ActorPatchSchema):
+    @app.patch('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema})
+    def update_actor(path: ActorPathSchema, form: ActorPatchSchema):
         """Updates an actor.
         
         Arguments:
+            id: the actor's id.
             form: actor's data.
         
         Returns a representation of the updated actor.
         """
         session = Session()
-        actor = session.query(Actor).filter(Actor.id == form.id).first()
+        actor = session.query(Actor).filter(Actor.id == path.id).first()
         if actor is None:
             abort(404)
         else:
@@ -145,7 +146,7 @@ def create_app(test_config=None):
         movies = session.query(Movie).all()
         return MovieListRepresentation(movies), 200
 
-    @app.post('/api/v1/movie', tags=[movies_tag], responses={"200": MovieViewSchema, "422": ErrorSchema})
+    @app.post('/api/v1/movies', tags=[movies_tag], responses={"200": MovieViewSchema, "422": ErrorSchema})
     def create_movie(form: MovieAddSchema):
         """Creates a new movie.
         
@@ -164,17 +165,17 @@ def create_app(test_config=None):
             logger.error(e)
             abort(422)
 
-    @app.delete('/api/v1/movie', tags=[movies_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema})
-    def delete_movie(form: MovieSearchSchema):
+    @app.delete('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema})
+    def delete_movie(path: MoviePathSchema):
         """Deletes an movie.
         
         Arguments:
-            form: movie's data.
+            id: the movie's id.
         
         Returns a status message.
         """
         session = Session()
-        movie = session.query(Movie).filter(Movie.id == form.id).first()
+        movie = session.query(Movie).filter(Movie.id == path.id).first()
         if movie is None:
             abort(404)
         else:
@@ -186,17 +187,18 @@ def create_app(test_config=None):
                 logger.error(e)
                 abort(422)
 
-    @app.patch('/api/v1/movie', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema})
-    def update_movie(form: MoviePatchSchema):
+    @app.patch('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema})
+    def update_movie(path: MoviePathSchema, form: MoviePatchSchema):
         """Updates an movie.
         
         Arguments:
+            id: the movie's id.
             form: movie's data.
         
         Returns a representation of the updated movie.
         """
         session = Session()
-        movie = session.query(Movie).filter(Movie.id == form.id).first()
+        movie = session.query(Movie).filter(Movie.id == path.id).first()
         if movie is None:
             abort(404)
         else:

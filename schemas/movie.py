@@ -2,6 +2,11 @@ from pydantic import BaseModel
 from typing import List
 from model.movie import Movie
 
+class MoviePathSchema(BaseModel):
+    """ Movie path schema.
+    """    
+    id: int
+    
 class MovieViewSchema(BaseModel):
     """ Movie schema.
     """
@@ -30,7 +35,6 @@ class MovieSearchSchema(BaseModel):
 class MoviePatchSchema(BaseModel):
     """ Movie patch schema.
     """
-    id: int 
     title: str 
     genre: str
     release_date: str

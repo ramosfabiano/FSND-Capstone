@@ -3,6 +3,11 @@ from typing import List
 from model.actor import Actor
 from flask import jsonify
 
+class ActorPathSchema(BaseModel):
+    """ Actor path schema.
+    """    
+    id: int
+    
 class ActorViewSchema(BaseModel):
     """ Actor schema.
     """
@@ -33,7 +38,6 @@ class ActorSearchSchema(BaseModel):
 class ActorPatchSchema(BaseModel):
     """ Actor patch schema.
     """
-    id: int
     name: str 
     gender: str
     birth_date: str 

@@ -21,14 +21,14 @@ The database system used is [PostgreSQL](https://www.postgresql.org/), along wit
 
 For authentication, we use  [Auth0](https://auth0.com/).
 
-The API is documented using [Swagger](https://swagger.io/).
+The API is documented using [OpenAPI/Swagger](https://swagger.io/).
 
 Finally, we deploy our app on [Heroku](https://www.heroku.com/) Cloud platform.
 
 
 ## API Documentation
 
-The API is documented using OpenAPI/Swagger.
+The API is documented using [Flask_OpenAPI3](https://luolingchun.github.io/flask-openapi3).
 
 The documentation can be browsed only at `http://localhost:5000/` once the server is running.
 
