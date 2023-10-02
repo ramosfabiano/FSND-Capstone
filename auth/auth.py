@@ -45,7 +45,7 @@ def check_permissions(permission, payload):
 #
 #  Decode JWT
 #
-# TODO: update these examples
+# TODO: update these examples (careful not to expose the secret)
 '''
 JWKS example:
 
