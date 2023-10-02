@@ -19,7 +19,7 @@ The database system used is [PostgreSQL](https://www.postgresql.org/), along wit
 
 [Flask-CORS](https://flask-cors.readthedocs.io/) is used to  handle cross origin requests.
 
-For authentication, we use  [Auth0](https://auth0.com/).
+For authentication, we use [Auth0](https://auth0.com/).
 
 The API is documented using [OpenAPI/Swagger](https://swagger.io/).
 
@@ -64,7 +64,7 @@ The following environment variables need to be set accordingly:
 ```bash
 export AUTH0_DOMAIN="xxxxxxxxxx.auth0.com" # tenant domain
 export ALGORITHMS="RS256"
-export API_AUDIENCE="castingagency"        # api audience
+export API_AUDIENCE="fsnd-capstone"        # api audience
 ```
 
 #### Permissions

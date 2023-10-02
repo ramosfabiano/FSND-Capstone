@@ -1,24 +1,23 @@
 import os
 from flask_openapi3 import OpenAPI, Info, Tag
-from flask import Flask, abort
+from flask import Flask, abort, request
 from flask_cors import CORS
 from flask import redirect
-from sqlalchemy.exc import IntegrityError
-from flask_sqlalchemy import SQLAlchemy
 import logging
 
 from model import Session, Actor, Movie, database_path
 from schemas import *
+from auth.auth import AuthError, requires_auth
 
 #
 # Creates, initializes and runs the Flask application
 #
-def create_app(test_config=None):
+def create_app(test_config=None, auth_enabled=False):
     
     # openapi setup
     info = Info(title="FSND-Capstone", version="1.0.0")
-    app = OpenAPI(__name__, info=info)
-
+    app = OpenAPI(__name__, info=info, security_schemes={"jwt": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}} if auth_enabled else None)
+        
     # openapi tags
     home_tag = Tag(name="Documentation", description="OpenAPI documentation")
     actors_tag = Tag(name="Actors", description="Actors API documentation")
@@ -52,16 +51,32 @@ def create_app(test_config=None):
         """Redirects to documentation page.
         """
         return redirect('/openapi/swagger')
-
+               
     #
     # Endpoints (actors)
     #
-    @app.get('/api/v1/actors', tags=[actors_tag], responses={"200": ActorListSchema})
+    @app.get('/api/v1/actors', tags=[actors_tag], responses={"200": ActorListSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('view:actors', auth_enabled)
     def get_actors():
         """Retrieves all actors.
         
         Returns a representation of the list of actors.
         """
+        '''
+        if auth_enabled:
+            token = request.headers.get("Authorization")
+            if token is None:
+                logger.error("No authorization token found.")
+                abort(401)
+            token = token.replace("Bearer ", "")
+            try:
+                payload = decode_jwt(token)
+                if payload is None:
+                    logger.error("Invalid token, no payload could be extracted.")
+                    abort(401)
+            except:
+                abort(401)
+        '''
         session = Session()
         actors = session.query(Actor).all()
         return ActorListRepresentation(actors), 200
@@ -263,7 +278,7 @@ def create_app(test_config=None):
 #
 # App instance
 # 
-app = create_app()
+app = create_app(auth_enabled=False)
 
 #
 # Error handlers
@@ -271,6 +286,10 @@ app = create_app()
 @app.errorhandler(400)
 def bad_request(error):
     return ErrorRepresentation('Bad request.'), 400
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return ErrorRepresentation('Unauthorized.'), 401
 
 @app.errorhandler(404)
 def not_found(error):
@@ -283,7 +302,12 @@ def unprocessable(error):
 @app.errorhandler(500)
 def internal_server_error(error):
     return ErrorRepresentation('Internal server error.'), 500
- 
+
+@app.errorhandler(AuthError)
+def handle_auth_error(error):    
+    return ErrorRepresentation(f'Not authorized: {error.error_message}'), error.status_code
+
+
 #
 # Main program
 # 
