@@ -2,7 +2,7 @@ import os
 import json
 from flask import request #, _request_ctx_stack
 from functools import wraps
-import jwt
+from jose import jwt
 from urllib.request import urlopen
 
 
@@ -123,13 +123,13 @@ def verify_decode_jwt(token):
             break
     if rsa_key:
         try:
-            payload = jwt.decode(token, rsa_key, algorithms=ALGORITHMS, audience=API_AUDIENCE, issuer=f'https://{AUTH0_DOMAIN}/')
-        except jwt.JWTClaimsError:
-            raise AuthError('incorrect claim', 401)
+            payload = jwt.decode(token, rsa_key, audience=API_AUDIENCE, issuer=f'https://{AUTH0_DOMAIN}/', algorithms=ALGORITHMS)
         except jwt.ExpiredSignatureError:
             raise AuthError('token expired', 401)
-        except Exception:
-            raise AuthError('could not parse token', 400)
+        except jwt.InvalidTokenError:
+            raise AuthError('invalid token', 401)
+        except Exception as e:
+            raise AuthError(f'could not parse token: {str(e)}', 400)
     else:
         raise AuthError('could not find key', 400)
     return payload
