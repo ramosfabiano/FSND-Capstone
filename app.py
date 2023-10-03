@@ -278,7 +278,7 @@ def create_app(test_config=None, auth_enabled=False):
 #
 # App instance
 # 
-app = create_app(auth_enabled=False)
+app = create_app(auth_enabled=True)
 
 #
 # Error handlers

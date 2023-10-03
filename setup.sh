@@ -1,6 +1,6 @@
 #!/bin/bash
 export DATABASE_URL="postgresql://postgres:1234@localhost:5432/postgres"
 
-export AUTH0_DOMAIN="xxxxxxxxxx.auth0.com" # tenant domain
+export AUTH0_DOMAIN="dev-rvbtc77b8udvaibw.us.auth0.com" 
 export ALGORITHMS="RS256"
-export API_AUDIENCE="fsnd-capstone"        # api audience
+export API_AUDIENCE="fsnd-capstone" 
