@@ -32,7 +32,7 @@ def create_app(test_config=None, auth_enabled=False):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
    
-    logger.info('Starting the application...')
+    logger.info('Starting the application... (auth_enabled=%s)', auth_enabled)
 
     # cross-origin resource sharing
     CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -276,9 +276,15 @@ def create_app(test_config=None, auth_enabled=False):
  
 
 #
+# Enables or disables authentication
+# 
+enable_auth_var = os.getenv('ENABLE_AUTH')
+auth_enabled = enable_auth_var is None or enable_auth_var != '0'
+
+#
 # App instance
 # 
-app = create_app(auth_enabled=True)
+app = create_app(auth_enabled=auth_enabled)
 
 #
 # Error handlers

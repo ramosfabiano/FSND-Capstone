@@ -66,6 +66,7 @@ export AUTH0_DOMAIN="xxxxxxxxxx.auth0.com" # tenant domain
 export ALGORITHMS="RS256"
 export API_AUDIENCE="fsnd-capstone"        # api audience
 ```
+Authentication can be completely disabled/bypassed by setting the ```ENABLE_AUTH=0``` environment variable.
 
 #### Permissions
 
