@@ -249,17 +249,9 @@ def create_app(test_config=None, auth_enabled=False):
         """
         try:
             session = Session()
-            actor = session.query(Actor).filter(Actor.id == form.actor_id).first()
-            movie = session.query(Movie).filter(Movie.id == form.movie_id).first()
-            new_association = actor_movie_association.insert().values(
-                actor_id=actor.id,
-                movie_id=movie.id,
-                character_name=form.character_name
-            )
-            session.execute(new_association)
-            #actor.movies.append(new_association)
-            #actor.movies.append(movie)
-            #movie.actors.append(actor)
+            query = actor_movie_association.insert().values(actor_id=form.actor_id, movie_id=form.movie_id, character_name=form.character_name)
+            if (session.execute(query) is None):
+                abort(422)            
             session.commit()
             return SuccessRepresentation(), 200
         except Exception as e:
@@ -268,7 +260,7 @@ def create_app(test_config=None, auth_enabled=False):
 
     @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('delete:movies', auth_enabled)
-    def delete_association(form: ActorMovieSchema):
+    def delete_association(form: ActorMovieDeleteSchema):
         """Deletes an actor-movie association.
         
         Arguments:
@@ -278,10 +270,13 @@ def create_app(test_config=None, auth_enabled=False):
         """
         try:
             session = Session()
-            actor = session.query(Actor).filter(Actor.id == form.actor_id).first()
-            movie = session.query(Movie).filter(Movie.id == form.movie_id).first()      
-            actor.movies.remove(movie)
-            #movie.actors.remove(actor) 
+            query = actor_movie_association.select().where(actor_movie_association.c.actor_id == form.actor_id).where(actor_movie_association.c.movie_id == form.movie_id)
+            result = session.execute(query)
+            if (session.execute(query) is None or len(result.all()) == 0):
+                abort(404)             
+            query = actor_movie_association.delete().where(actor_movie_association.c.actor_id == form.actor_id).where(actor_movie_association.c.movie_id == form.movie_id)
+            if (session.execute(query) is None):
+                abort(422) 
             session.commit()
             return SuccessRepresentation(), 200
         except Exception as e:
