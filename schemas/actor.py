@@ -48,7 +48,7 @@ def ActorRepresentation(actor: Actor):
     """    
     movies_characters = []
     for m in actor.movies:
-        for a in m.actor_associations:
+        for a in m.associations:
             if a.actor_id == actor.id:
                 movies_characters.append([m.id, m.title, a.character_name])                
     return {

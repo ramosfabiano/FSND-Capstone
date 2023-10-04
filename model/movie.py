@@ -14,12 +14,8 @@ class Movie(Base):
     title = Column(String, unique=True)
     genre = Column(String, unique=False)
     release_date = Column(Date, unique=False)
-    #actors = relationship('Actor', secondary=actor_movie_association, back_populates='movies')
 
-    actor_associations = relationship(
-        'ActorMovieAssociation',
-        back_populates='movies'
-    )
+    associations = relationship('ActorMovieAssociation',back_populates='movies')
     actors = relationship('Actor', secondary=actor_movie_association, back_populates='movies')
         
     def __init__(self, title, genre, release_date):

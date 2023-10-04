@@ -16,10 +16,7 @@ class Actor(Base):
     birth_date = Column(Date, unique=False)
     nationality = Column(String, unique=False)
     
-    movie_associations = relationship(
-        'ActorMovieAssociation',
-        back_populates='actors'
-    )
+    associations = relationship('ActorMovieAssociation', back_populates='actors')
     movies = relationship('Movie', secondary=actor_movie_association, back_populates='actors')
     
             
