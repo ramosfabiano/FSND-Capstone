@@ -5,3 +5,4 @@ class ActorMovieSchema(BaseModel):
     """
     actor_id: int 
     movie_id: int 
+    character_name: str

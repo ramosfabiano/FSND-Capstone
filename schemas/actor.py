@@ -15,7 +15,7 @@ class ActorViewSchema(BaseModel):
     name: str 
     gender: str
     birth_date: str
-    email: str
+    nationality: str
 
 class ActorListSchema(BaseModel):
     """ Actor list schema.
@@ -28,7 +28,7 @@ class ActorAddSchema(BaseModel):
     name: str 
     gender: str
     birth_date: str
-    email: str
+    nationality: str
 
 class ActorSearchSchema(BaseModel):
     """ Actor search schema.
@@ -41,18 +41,23 @@ class ActorPatchSchema(BaseModel):
     name: str 
     gender: str
     birth_date: str 
-    email: str  
+    nationality: str  
     
 def ActorRepresentation(actor: Actor):
     """ Returns the representation of an actor.
-    """
+    """    
+    movies_characters = []
+    for m in actor.movies:
+        for a in m.actor_associations:
+            if a.actor_id == actor.id:
+                movies_characters.append([m.id, m.title, a.character_name])                
     return {
         "id": actor.id,
         "name": actor.name,
         "gender": actor.gender,
         "birth_date": actor.birth_date,
-        "email": actor.email,
-        "movies": [[m.id, m.title] for m in actor.movies]
+        "nationality": actor.nationality,
+        "movie_assocations": movies_characters   
     }
 
 def ActorListRepresentation(actors: List[Actor]):

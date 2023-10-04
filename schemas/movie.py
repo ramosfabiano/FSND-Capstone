@@ -42,12 +42,17 @@ class MoviePatchSchema(BaseModel):
 def MovieRepresentation(movie: Movie):
     """ Returns the representation of a movie.
     """
+    actor_characters = [] 
+    for a in movie.actors:
+        for m in a.movie_associations:
+            if m.movie_id == movie.id:
+                actor_characters.append([a.id, a.name, m.character_name])      
     return {
         "id": movie.id,
         "title": movie.title,
         "genre": movie.genre,
         "release_date": movie.release_date,
-        "actors": [[a.id, a.name] for a in movie.actors]
+        "actor_assocations": actor_characters
     }
 
 def MovieListRepresentation(movies: List[Movie]):

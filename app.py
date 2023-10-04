@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask import redirect
 import logging
 
-from model import Session, Actor, Movie, database_path
+from model import Session, Actor, Movie, actor_movie_association, database_path
 from schemas import *
 from auth.auth import AuthError, requires_auth
 
@@ -93,7 +93,7 @@ def create_app(test_config=None, auth_enabled=False):
         """
         try:
             session = Session()
-            actor = Actor(name=form.name, gender=form.gender, birth_date=form.birth_date, email=form.email)
+            actor = Actor(name=form.name, gender=form.gender, birth_date=form.birth_date, nationality=form.nationality)
             session.add(actor)
             session.commit()
             return ActorRepresentation(actor), 200
@@ -144,7 +144,7 @@ def create_app(test_config=None, auth_enabled=False):
                 actor.name = form.name
                 actor.gender = form.gender
                 actor.birth_date = form.birth_date
-                actor.email = form.email
+                actor.nationality = form.nationality
                 session.commit()
                 return ActorRepresentation(actor), 200
             except Exception as e:
@@ -251,7 +251,14 @@ def create_app(test_config=None, auth_enabled=False):
             session = Session()
             actor = session.query(Actor).filter(Actor.id == form.actor_id).first()
             movie = session.query(Movie).filter(Movie.id == form.movie_id).first()
-            actor.movies.append(movie)
+            new_association = actor_movie_association.insert().values(
+                actor_id=actor.id,
+                movie_id=movie.id,
+                character_name=form.character_name
+            )
+            session.execute(new_association)
+            #actor.movies.append(new_association)
+            #actor.movies.append(movie)
             #movie.actors.append(actor)
             session.commit()
             return SuccessRepresentation(), 200
