@@ -81,7 +81,8 @@ def create_app(test_config=None, auth_enabled=False):
         actors = session.query(Actor).all()
         return ActorListRepresentation(actors), 200
 
-    @app.post('/api/v1/actors', tags=[actors_tag], responses={"200": ActorViewSchema, "422": ErrorSchema})
+    @app.post('/api/v1/actors', tags=[actors_tag], responses={"200": ActorViewSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('post:actors', auth_enabled)
     def create_actor(form: ActorAddSchema):
         """Creates a new actor.
         
@@ -100,7 +101,8 @@ def create_app(test_config=None, auth_enabled=False):
             logger.error(e)
             abort(422)
         
-    @app.delete('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema})
+    @app.delete('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('delete:actors', auth_enabled)
     def delete_actor(path: ActorPathSchema):
         """Deletes an actor.
         
@@ -122,7 +124,8 @@ def create_app(test_config=None, auth_enabled=False):
                 logger.error(e)
                 abort(422)
 
-    @app.patch('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema})
+    @app.patch('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('update:actors', auth_enabled)
     def update_actor(path: ActorPathSchema, form: ActorPatchSchema):
         """Updates an actor.
         
@@ -151,7 +154,8 @@ def create_app(test_config=None, auth_enabled=False):
     #
     # Movies
     #
-    @app.get('/api/v1/movies', tags=[movies_tag], responses={"200": MovieListSchema})
+    @app.get('/api/v1/movies', tags=[movies_tag], responses={"200": MovieListSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('view:movies', auth_enabled)
     def get_movies():
         """Retrieves all movies.
         
@@ -161,7 +165,8 @@ def create_app(test_config=None, auth_enabled=False):
         movies = session.query(Movie).all()
         return MovieListRepresentation(movies), 200
 
-    @app.post('/api/v1/movies', tags=[movies_tag], responses={"200": MovieViewSchema, "422": ErrorSchema})
+    @app.post('/api/v1/movies', tags=[movies_tag], responses={"200": MovieViewSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('post:movies', auth_enabled)
     def create_movie(form: MovieAddSchema):
         """Creates a new movie.
         
@@ -180,7 +185,8 @@ def create_app(test_config=None, auth_enabled=False):
             logger.error(e)
             abort(422)
 
-    @app.delete('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema})
+    @app.delete('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('delete:movies', auth_enabled)
     def delete_movie(path: MoviePathSchema):
         """Deletes an movie.
         
@@ -202,7 +208,8 @@ def create_app(test_config=None, auth_enabled=False):
                 logger.error(e)
                 abort(422)
 
-    @app.patch('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema})
+    @app.patch('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('update:movies', auth_enabled)
     def update_movie(path: MoviePathSchema, form: MoviePatchSchema):
         """Updates an movie.
         
@@ -230,7 +237,8 @@ def create_app(test_config=None, auth_enabled=False):
     #
     # Actor-Movie Association
     # 
-    @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema})
+    @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('update:movies', auth_enabled)
     def create_association(form: ActorMovieSchema):
         """Creates a new actor-movie association.
         
@@ -251,7 +259,8 @@ def create_app(test_config=None, auth_enabled=False):
             logger.error(e)
             abort(422)
 
-    @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema})
+    @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @requires_auth('delete:movies', auth_enabled)
     def delete_association(form: ActorMovieSchema):
         """Deletes an actor-movie association.
         
