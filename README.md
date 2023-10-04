@@ -147,9 +147,9 @@ Finally launch the server locally:
 To run the tests, first load the testing database:
 
 ```bash
-dropdb testdb
-createdb testdb
-psql testdb < testdb.psql
+dropdb -U postgres postgres
+createdb -U postgres postgres
+psql -U postgres postgres < testdb.psql
 ```
 
 Then follow the same preliminary steps used to run the app locally, except that instead of running the flask app we run the test itself:
