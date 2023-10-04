@@ -8,6 +8,13 @@ class ActorPathSchema(BaseModel):
     """    
     id: int
     
+class ActorCharacterViewSchema(BaseModel):
+    """ Actor character schema.
+    """
+    actor_id: int 
+    movie_title: str 
+    character_name: str
+       
 class ActorViewSchema(BaseModel):
     """ Actor schema.
     """
@@ -16,6 +23,7 @@ class ActorViewSchema(BaseModel):
     gender: str
     birth_date: str
     nationality: str
+    assocations: ActorCharacterViewSchema
 
 class ActorListSchema(BaseModel):
     """ Actor list schema.
@@ -42,22 +50,22 @@ class ActorPatchSchema(BaseModel):
     gender: str
     birth_date: str 
     nationality: str  
-    
+
 def ActorRepresentation(actor: Actor):
     """ Returns the representation of an actor.
     """    
-    movies_characters = []
+    associations = []
     for m in actor.movies:
         for a in m.associations:
             if a.actor_id == actor.id:
-                movies_characters.append([m.id, m.title, a.character_name])                
+                associations.append([m.id, m.title, a.character_name])                
     return {
         "id": actor.id,
         "name": actor.name,
         "gender": actor.gender,
         "birth_date": actor.birth_date,
         "nationality": actor.nationality,
-        "movie_assocations": movies_characters   
+        "assocations": associations   
     }
 
 def ActorListRepresentation(actors: List[Actor]):

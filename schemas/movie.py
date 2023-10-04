@@ -7,6 +7,13 @@ class MoviePathSchema(BaseModel):
     """    
     id: int
     
+class MovieCharacterViewSchema(BaseModel):
+    """ Movie character schema.
+    """
+    actor_id: int 
+    actor_name: str 
+    character_name: str
+        
 class MovieViewSchema(BaseModel):
     """ Movie schema.
     """
@@ -14,6 +21,7 @@ class MovieViewSchema(BaseModel):
     title: str 
     genre: str
     release_date: str
+    assocations: MovieCharacterViewSchema
 
 class MovieListSchema(BaseModel):
     """ Movie list schema.
@@ -42,17 +50,17 @@ class MoviePatchSchema(BaseModel):
 def MovieRepresentation(movie: Movie):
     """ Returns the representation of a movie.
     """
-    actor_characters = [] 
+    associations = [] 
     for a in movie.actors:
         for m in a.associations:
             if m.movie_id == movie.id:
-                actor_characters.append([a.id, a.name, m.character_name])      
+                associations.append([a.id, a.name, m.character_name])      
     return {
         "id": movie.id,
         "title": movie.title,
         "genre": movie.genre,
         "release_date": movie.release_date,
-        "actor_assocations": actor_characters
+        "assocations": associations
     }
 
 def MovieListRepresentation(movies: List[Movie]):
