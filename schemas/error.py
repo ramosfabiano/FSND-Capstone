@@ -11,15 +11,3 @@ def ErrorRepresentation(message='Request failed.'):
     return {
         "message": message
     }
-
-class SuccessSchema(BaseModel):
-    """ Success message schema.
-    """
-    message: str
-
-def SuccessRepresentation(message='Request succeeded.'):
-    """ Returns the representation of a succesful request.
-    """
-    return {
-        "message": message
-    }

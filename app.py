@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask import redirect
 import logging
 
-from model import Session, Actor, Movie, actor_movie_association, database_path
+from model import Session, Actor, Movie, ActorMovieAssociation, database_path
 from schemas import *
 from auth.auth import AuthError, requires_auth
 
@@ -101,7 +101,7 @@ def create_app(test_config=None, auth_enabled=False):
             logger.error(e)
             abort(422)
         
-    @app.delete('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @app.delete('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('delete:actors', auth_enabled)
     def delete_actor(path: ActorPathSchema):
         """Deletes an actor.
@@ -115,14 +115,13 @@ def create_app(test_config=None, auth_enabled=False):
         actor = session.query(Actor).filter(Actor.id == path.id).first()
         if actor is None:
             abort(404)
-        else:
-            try:
-                session.delete(actor)
-                session.commit()
-                return SuccessRepresentation(), 200
-            except Exception as e:
-                logger.error(e)
-                abort(422)
+        try:
+            session.delete(actor)
+            session.commit()
+            return ActorRepresentation(actor), 200
+        except Exception as e:
+            logger.error(e)
+            abort(422)
 
     @app.patch('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('update:actors', auth_enabled)
@@ -139,17 +138,16 @@ def create_app(test_config=None, auth_enabled=False):
         actor = session.query(Actor).filter(Actor.id == path.id).first()
         if actor is None:
             abort(404)
-        else:
-            try:
-                actor.name = form.name
-                actor.gender = form.gender
-                actor.birth_date = form.birth_date
-                actor.nationality = form.nationality
-                session.commit()
-                return ActorRepresentation(actor), 200
-            except Exception as e:
-                logger.error(e)
-                abort(422)
+        try:
+            actor.name = form.name
+            actor.gender = form.gender
+            actor.birth_date = form.birth_date
+            actor.nationality = form.nationality
+            session.commit()
+            return ActorRepresentation(actor), 200
+        except Exception as e:
+            logger.error(e)
+            abort(422)
 
     #
     # Movies
@@ -185,7 +183,7 @@ def create_app(test_config=None, auth_enabled=False):
             logger.error(e)
             abort(422)
 
-    @app.delete('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": SuccessSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @app.delete('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('delete:movies', auth_enabled)
     def delete_movie(path: MoviePathSchema):
         """Deletes an movie.
@@ -199,14 +197,13 @@ def create_app(test_config=None, auth_enabled=False):
         movie = session.query(Movie).filter(Movie.id == path.id).first()
         if movie is None:
             abort(404)
-        else:
-            try:
-                session.delete(movie)
-                session.commit()
-                return SuccessRepresentation(), 200
-            except Exception as e:
-                logger.error(e)
-                abort(422)
+        try:
+            session.delete(movie)
+            session.commit()
+            return MovieRepresentation(movie), 200
+        except Exception as e:
+            logger.error(e)
+            abort(422)
 
     @app.patch('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('update:movies', auth_enabled)
@@ -223,21 +220,20 @@ def create_app(test_config=None, auth_enabled=False):
         movie = session.query(Movie).filter(Movie.id == path.id).first()
         if movie is None:
             abort(404)
-        else:
-            try:
-                movie.title = form.title
-                movie.genre = form.genre
-                movie.release_date = form.release_date
-                session.commit()
-                return MovieRepresentation(movie), 200
-            except Exception as e:
-                logger.error(e)
-                abort(422) 
+        try:
+            movie.title = form.title
+            movie.genre = form.genre
+            movie.release_date = form.release_date
+            session.commit()
+            return MovieRepresentation(movie), 200
+        except Exception as e:
+            logger.error(e)
+            abort(422) 
 
     #
     # Actor-Movie Association
     # 
-    @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ActorMovieSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('update:movies', auth_enabled)
     def create_association(form: ActorMovieSchema):
         """Creates a new actor-movie association.
@@ -249,16 +245,15 @@ def create_app(test_config=None, auth_enabled=False):
         """
         try:
             session = Session()
-            query = actor_movie_association.insert().values(actor_id=form.actor_id, movie_id=form.movie_id, character_name=form.character_name)
-            if (session.execute(query) is None):
-                abort(422)            
+            actor_movie = ActorMovieAssociation(actor_id=form.actor_id,  movie_id=form.movie_id, character_name=form.character_name)
+            session.add(actor_movie)
             session.commit()
-            return SuccessRepresentation(), 200
+            return ActorMovieRepresentation(actor_movie), 200
         except Exception as e:
             logger.error(e)
             abort(422)
 
-    @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": SuccessSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
+    @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ActorMovieSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('delete:movies', auth_enabled)
     def delete_association(form: ActorMovieDeleteSchema):
         """Deletes an actor-movie association.
@@ -268,17 +263,14 @@ def create_app(test_config=None, auth_enabled=False):
         
         Returns a status message.
         """
+        session = Session()
+        actor_movie = session.query(ActorMovieAssociation).filter(ActorMovieAssociation.actor_id==form.actor_id, ActorMovieAssociation.movie_id==form.movie_id).first()
+        if (actor_movie is None):
+            abort(404)   
         try:
-            session = Session()
-            query = actor_movie_association.select().where(actor_movie_association.c.actor_id == form.actor_id).where(actor_movie_association.c.movie_id == form.movie_id)
-            result = session.execute(query)
-            if (session.execute(query) is None or len(result.all()) == 0):
-                abort(404)             
-            query = actor_movie_association.delete().where(actor_movie_association.c.actor_id == form.actor_id).where(actor_movie_association.c.movie_id == form.movie_id)
-            if (session.execute(query) is None):
-                abort(422) 
-            session.commit()
-            return SuccessRepresentation(), 200
+            session.delete(actor_movie)
+            session.commit()            
+            return ActorMovieRepresentation(actor_movie), 200
         except Exception as e:
             logger.error(e)
             abort(422)
