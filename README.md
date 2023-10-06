@@ -21,6 +21,8 @@ For authentication/authorization, we use [Json Web Tokens - JWTs](https://datatr
 
 The API is documented using [OpenAPI/Swagger](https://swagger.io/).
 
+Optionally, [Docker](https://www.docker.com/) or [Podman](https://podman.io/) are required for running inside containers. They can be used interchangeably for this project.
+
 Finally, we deploy our app on [Heroku](https://www.heroku.com/) Cloud platform.
 
 
