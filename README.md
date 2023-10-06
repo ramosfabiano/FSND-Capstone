@@ -3,11 +3,11 @@ Capstone Project in the Udacity Full Stack NanoDegree program.
 
 ## Project Motivation
 
-The objetive of this capstone project is to showcase the skills learned during the course.
+The objective of this capstone project is to showcase the skills learned during the course.
 
 In particular, we are implementing a *backend* , thus involving  data modelling, API design, role-based authentication/authorization, containerization and finally its deployment on a cloud platform.
 
-The context of this application is a "Casting Agency", an imaginary company that is responsible for creating movies and managing and assigning actors to those movies. We are then creating an API that allows manipulating the actors and movies database.
+The context of this application is a "Casting Agency", an imaginary company that is responsible for creating and managing movies, actors, and their associations. We are then creating an API that allows manipulating the actors and movies database.
 
 ## Technology Stack
 
