@@ -67,7 +67,7 @@ def verify_decode_jwt(token):
 
 
 #
-#    @requires_auth() decorator method
+# @requires_auth() decorator method
 #
 def requires_auth(permission='', enabled=True):
     def requires_auth_decorator(f):

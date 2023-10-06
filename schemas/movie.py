@@ -47,7 +47,6 @@ class MoviePatchSchema(BaseModel):
     genre: str
     release_date: str
  
- 
 def MoviePatchRepresentation(movie: Movie):
     """ Returns the patch representation of a movie.
     """

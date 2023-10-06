@@ -2,7 +2,6 @@ from sqlalchemy import Column, String, Integer, Date
 from sqlalchemy.orm import relationship
 from model.base import Base
 from model.actor_movie import actor_movie_association
-from sqlalchemy.ext.associationproxy import association_proxy
 
 #
 # Movie model
@@ -14,7 +13,6 @@ class Movie(Base):
     title = Column(String, unique=True)
     genre = Column(String, unique=False)
     release_date = Column(Date, unique=False)
-
     associations = relationship('ActorMovieAssociation',back_populates='movies')
     actors = relationship('Actor', secondary=actor_movie_association, back_populates='movies', overlaps="actors, movies, associations")
         

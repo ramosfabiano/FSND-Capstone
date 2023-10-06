@@ -44,7 +44,7 @@ def create_app():
     CORS(app, resources={r"/api/*": {"origins": "*"}})
             
     #
-    # Documentation
+    # Endpoints (documentation)
     #
     @app.get('/', tags=[home_tag])
     def home():
@@ -141,7 +141,7 @@ def create_app():
             abort(422)
 
     #
-    # Movies
+    # Endpoints (movies)
     #
     @app.get('/api/v1/movies', tags=[movies_tag], responses={"200": MovieListSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('view:movies', auth_enabled)
@@ -222,8 +222,8 @@ def create_app():
             abort(422) 
 
     #
-    # Actor-Movie Association
-    # 
+    # Endpoints (actor-movies associations)
+    #
     @app.post('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ActorMovieSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
     @requires_auth('update:movies', auth_enabled)
     def create_association(form: ActorMovieSchema):

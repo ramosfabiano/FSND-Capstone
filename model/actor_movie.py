@@ -21,6 +21,5 @@ class ActorMovieAssociation(Base):
     Column('actor_id', Integer, ForeignKey('actor.id'), primary_key=True),
     Column('movie_id', Integer, ForeignKey('movie.id'), primary_key=True),
     Column('character_name', String, unique=False, nullable=False)
-
     actors = relationship('Actor', back_populates='associations')
     movies = relationship('Movie', back_populates='associations')
