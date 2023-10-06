@@ -260,7 +260,7 @@ def create_app():
             abort(422)
 
     @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ActorMovieSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
-    @requires_auth('delete:movies', auth_enabled)
+    @requires_auth('update:movies', auth_enabled)
     def delete_association(form: ActorMovieDeleteSchema):
         """Deletes an actor-movie association.
         

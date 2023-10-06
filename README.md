@@ -5,7 +5,7 @@ Capstone Project in the Udacity Full Stack NanoDegree program.
 
 The objetive of this capstone project is to showcase the skills learned during the course.
 
-In particular, we are implementing a *backend* , thus involving  data modelling, API design, authentication/authorization and finally its deployment on a cloud platform.
+In particular, we are implementing a *backend* , thus involving  data modelling, API design, role-based authentication/authorization, containerization and finally its deployment on a cloud platform.
 
 The context of this application is a "Casting Agency", an imaginary company that is responsible for creating movies and managing and assigning actors to those movies. We are then creating an API that allows manipulating the actors and movies database.
 
@@ -50,6 +50,8 @@ export DATABASE_URL="postgresql://postgres:1234@localhost:5432/fsnd_capstone"
 
 indicating a server at host `localhost`, port `5432`, user `postgres` , password `1234` and database `fsnd_capstone`.
 
+The [containerized execution](#Containerized execution) option does not require an external postgres server.
+
 ### Authentication
 
 For authentication, we assume an Auth0 account has been setup.
@@ -62,7 +64,7 @@ export API_AUDIENCE="fsnd-capstone"                  # api audience
 export ALGORITHMS="RS256"
 ```
 
-Aditionally, authentication can be completely disabled/bypassed by setting the `ENABLE_AUTH=0` environment variable.
+Aditionally, for development purposes, authentication can be completely disabled/bypassed by setting the `ENABLE_AUTH=0` environment variable.
 
 #### Authentication Details
 
@@ -86,11 +88,11 @@ The following invividual permissions are required:
 
 The following roles are required:
 
-* Assistant: 
+* Assistant: view permissions for actors and movies.
   *  `view:actors`
   *  `view:movies`
 
-* Director: 
+* Director: all permissions for actors plus view/update permissions for movies.
   * `view:actors`
   * `update:actors`
   * `delete:actors`
@@ -98,7 +100,7 @@ The following roles are required:
   * `view:movies`
   * `update:movies`
     
-* Producer
+* Producer: all permissions for actors and movies.
   * `view:actors`
   * `update:actors`
   * `delete:actors`
@@ -196,8 +198,7 @@ Finally launch the tests:
 (venv) python -m unittest tests.test_app
 ```
 
-
-### Running the application (containerized)
+### Containerized execution
 
 We offer an alternative way of running the application based on docker/podman containers.
 
