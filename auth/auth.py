@@ -65,7 +65,6 @@ def verify_decode_jwt(token):
         raise AuthError('could not find key', 400)
     return payload
 
-
 #
 # @requires_auth() decorator method
 #
