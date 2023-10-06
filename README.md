@@ -121,7 +121,7 @@ The following roles are required:
   
 ##### JWT
 
-For project submission purposes, valid JWT access tokens for 3 users (`assistant`, `director` and `producer`) are provided in `tests/auth.json`
+For project submission purposes, valid JWT access tokens for 3 users (`assistant`, `director` and `producer`) are provided in `tests/auth.json`.
 
 These tokens are used by the unit tests, and can also be used for authentication in the Swagger documentation interface.
 
@@ -159,7 +159,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-Then, sure the environment variables related to the database and authentication are set. For convience, we provide the `setup.sh` script:
+Then, make sure the environment variables related to the database and authentication are set. For convience, we provide the `setup.sh` script:
 
 ```bash
 (venv) source ./setup.sh 
@@ -173,7 +173,7 @@ Finally launch the app:
 
 ### Running the tests
 
-First, initialize the testing database:
+First, initialize the testing database (mandatory):
 
 ```bash
 dropdb -U postgres fsnd_capstone_test
@@ -202,11 +202,11 @@ Finally launch the tests:
 
 ### Containerized execution
 
-We offer an alternative way of running the application based on docker/podman containers.
+We offer an alternative way of running the application using docker/podman containers.
 
-For this we encapsulate both the database and app installation together.
+For this we bundle both the database and app installation together using `podman-compose`.
 
-In order to launch the containerized version, first build the container images (done once):
+In order to launch the containerized version, first build the container images:
 
 ```bash
  podman-compose build
@@ -224,9 +224,9 @@ When finished, bring the containers down:
  podman-compose down
 ```
 
-A couple of observations for the containerized execution:
-* the environment variables are not read from `setup.sh`, but from `docker/*.env`. They are ingested automatically and do not require manual sourcing. If editing the `docker/*.env`, watch out for extra spaces ;) 
-* the postgres container will keep its data files under `docker/postgres_data/`. This folder is automatically created and mounted inside the container.
+A couple of observations for the containerized execution option:
+* The environment variables are not read from `setup.sh`, but from `docker/*.env`. They are ingested automatically and do not require manual sourcing. Tip: if editing the `docker/*.env`, watch out for extra white spaces ;) 
+* The postgres container will keep its data files under `docker/postgres_data/`. This folder is automatically created and mounted inside the postgres container.
 
 
 ## Cloud Deployment
