@@ -121,7 +121,7 @@ The following roles are required:
   
 ##### JWT
 
-For project submission purposes, valid JWT access tokens are provided in `tests/auth.json`
+For project submission purposes, valid JWT access tokens for 3 users (`assistant`, `director` and `producer`) are provided in `tests/auth.json`
 
 These tokens are used by the unit tests, and can also be used for authentication in the Swagger documentation interface.
 

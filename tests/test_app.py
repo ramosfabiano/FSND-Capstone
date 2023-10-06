@@ -22,9 +22,9 @@ class AppTests(unittest.TestCase):
         with open('tests/auth.json', 'r') as f:
             self.auth = json.loads(f.read())
         
-        assistant_token = self.auth["roles"]["assistant"]["access_token"]
-        director_token = self.auth["roles"]["director"]["access_token"]
-        producer_token = self.auth["roles"]["producer"]["access_token"]
+        assistant_token = self.auth["users"]["assistant"]["access_token"]
+        director_token = self.auth["users"]["director"]["access_token"]
+        producer_token = self.auth["users"]["producer"]["access_token"]
         self.auth_headers = {
             'assistant': { 'Authorization': f'Bearer {assistant_token}'},
             'director':  { 'Authorization': f'Bearer {director_token}'},
