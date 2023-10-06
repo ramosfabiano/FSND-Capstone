@@ -235,11 +235,7 @@ For submission purposes, we have deployed the application to the [Heroku](https:
 
 For access tokens to be used for testing, please refer to the [JWT](#JWT) section.
 
+The app is deployed and live [here](https://fsnd-capstone-74a9cd403748.herokuapp.com/).
 
-URL and info of how to run the application...
-
-This is an overview of the process...
-
-**TODO:** complete
 
 
