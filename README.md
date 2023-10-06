@@ -66,6 +66,8 @@ export ALGORITHMS="RS256"
 
 Aditionally, for development purposes, authentication can be completely disabled/bypassed by setting the `ENABLE_AUTH=0` environment variable.
 
+For submission purposes only, in order to match the rubric, we have also provided the a client's ID and SECRET in the  `setup.sh` initialization script.
+
 #### Authentication Details
 
 ##### Permissions
