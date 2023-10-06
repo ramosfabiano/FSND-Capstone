@@ -50,7 +50,7 @@ export DATABASE_URL="postgresql://postgres:1234@localhost:5432/fsnd_capstone"
 
 indicating a server at host `localhost`, port `5432`, user `postgres` , password `1234` and database `fsnd_capstone`.
 
-The [containerized execution](#Containerized execution) option does not require an external postgres server.
+The containerized execution option, described later in this document, does not require an external postgres server.
 
 ### Authentication
 
