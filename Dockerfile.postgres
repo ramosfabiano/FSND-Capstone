@@ -1,0 +1,15 @@
+FROM postgres:13-bullseye
+
+WORKDIR /scripts
+COPY fsnd_capstone.psql .
+
+# the official postgres docker image will run bash scripts found in the /docker-entrypoint-initdb.d/ folder.
+RUN mkdir -p /docker-entrypoint-initdb.d
+
+
+# the script will create the database and populate it with the data from the .psql file.
+# if existing database is found in data directory, the script will not be run.
+RUN echo '#!/bin/bash'                                                        >> /docker-entrypoint-initdb.d/init_db.sh
+RUN echo 'createdb -U postgres fsnd_capstone'                                 >> /docker-entrypoint-initdb.d/init_db.sh
+RUN echo 'psql -U postgres fsnd_capstone < /scripts/fsnd_capstone.psql'       >> /docker-entrypoint-initdb.d/init_db.sh
+RUN chmod +x /docker-entrypoint-initdb.d/init_db.sh

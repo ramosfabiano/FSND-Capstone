@@ -10,9 +10,15 @@ from schemas import *
 from auth.auth import AuthError, requires_auth
 
 #
+# Enables or disables authentication
+# 
+enable_auth_var = os.getenv('ENABLE_AUTH')
+auth_enabled = enable_auth_var is None or enable_auth_var != '0'
+
+#
 # Creates, initializes and runs the Flask application
 #
-def create_app(test_config=None, auth_enabled=False):
+def create_app():
     
     # openapi setup
     info = Info(title="FSND-Capstone", version="1.0.0")
@@ -32,7 +38,7 @@ def create_app(test_config=None, auth_enabled=False):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
    
-    logger.info('Starting the application... (auth_enabled=%s)', auth_enabled)
+    logger.info(f'Starting the application... (auth_enabled={auth_enabled})')
 
     # cross-origin resource sharing
     CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -305,16 +311,9 @@ def create_app(test_config=None, auth_enabled=False):
     
     return app
  
-
-#
-# Enables or disables authentication
-# 
-enable_auth_var = os.getenv('ENABLE_AUTH')
-auth_enabled = enable_auth_var is None or enable_auth_var != '0'
-
 #
 # Main program
 # 
 if __name__ == '__main__':
-    app = create_app(auth_enabled=auth_enabled)
+    app = create_app()
     app.run()

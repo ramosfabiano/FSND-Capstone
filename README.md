@@ -195,6 +195,35 @@ Finally launch the tests:
 ```
 
 
+### Running the application (containerized)
+
+We offer an alternative way of running the application based on docker/podman containers.
+
+For this we encapsulate both the database and app installation together.
+
+In order to launch the containerized version, first build the container images (done once):
+
+```bash
+ podman-compose build
+```
+
+Then launch the database/application bundle:
+
+```bash
+ podman-compose up
+```
+
+When finished, bring the containers down:
+
+```bash
+ podman-compose down
+```
+
+A couple of observations for the containerized execution:
+* the environment variables are not read from `setup.sh`, but from `docker/*.env`. They are ingested automatically and do not require manual sourcing. If editing the `docker/*.env`, watch out for extra spaces ;) 
+* the postgres container will keep its data files under `docker/postgres_data/`. This folder is automatically created and mounted inside the container.
+
+
 ## Cloud Deployment
 
 For submission purposes, we have deployed the application to the [Heroku](https://www.heroku.com/) cloud provider.

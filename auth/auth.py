@@ -60,12 +60,8 @@ def verify_decode_jwt(token):
     if rsa_key:
         try:
             payload = jwt.decode(token, rsa_key, audience=API_AUDIENCE, issuer=f'https://{AUTH0_DOMAIN}/', algorithms=ALGORITHMS)
-        except jwt.ExpiredSignatureError:
-            raise AuthError('token expired', 401)
-        except jwt.InvalidTokenError:
-            raise AuthError('invalid token', 401)
         except Exception as e:
-            raise AuthError(f'could not parse token: {str(e)}', 400)
+            raise AuthError(f'error processing token: {str(e)}', 400)
     else:
         raise AuthError('could not find key', 400)
     return payload

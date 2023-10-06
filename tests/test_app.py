@@ -2,7 +2,7 @@ import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 
-from app import create_app, auth_enabled
+from app import create_app
 
 #
 # Test Class
@@ -12,7 +12,7 @@ class AppTests(unittest.TestCase):
     # Code that runs once before all test methods
     @classmethod
     def setUpClass(self):
-        self.app = create_app(auth_enabled=auth_enabled)
+        self.app = create_app()
         self.client = self.app.test_client
 
         with open('tests/auth.json', 'r') as f:

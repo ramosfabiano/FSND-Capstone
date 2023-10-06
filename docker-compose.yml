@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: fsnd-capstone-postgres
+    build: 
+      context: ./
+      dockerfile: Dockerfile.postgres
+    restart: always
+    ports:
+      - 5432:5432     
+    env_file:
+      - ./docker/postgres.env
+     # as this is a development enviroment, we map the pg data dir to a local directory
+    volumes:
+      - ./docker/postgres_data:/var/lib/postgresql/data
+
+  app:
+    container_name: fsnd-capstone-app
+    build: 
+      context: ./
+      dockerfile: Dockerfile.app
+    restart: always
+    ports:
+      - 5000:5000 
+    env_file:
+      - ./docker/app.env
+    # as this is a development enviroment, the simply current directory to the app directory in the container
+    volumes:          
+      - ./:/app   
