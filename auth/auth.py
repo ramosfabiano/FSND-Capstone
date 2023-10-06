@@ -40,7 +40,6 @@ def check_permissions(permission, payload):
         raise AuthError('missing permissions.', 403)
     if not permission in payload['permissions']:
         raise AuthError('access is forbidden.', 403)
-    return True
 
 #
 #  Decode JWT

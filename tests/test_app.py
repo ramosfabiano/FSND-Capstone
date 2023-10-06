@@ -143,85 +143,147 @@ class AppTests(unittest.TestCase):
     # POST
     #
     def test_post_actor_not_authorized(self):
-        #fail for assistant
-        pass
+        role = 'assistant'
+        actor = ActorPatchRepresentation(Actor(name='FailedPostActor', gender='Male', birth_date='1979-01-01', nationality='Brazilian'))
+        res = self.client().post(f'/api/v1/actors', data=actor, headers=self.auth_headers[role])
+        self.assertEqual(res.status_code, 403)
   
     def test_post_actor(self):
-        # for director and producer
-        pass
- 
-    def test_post_actor_fail_invalid_data(self):
-        # for director OR producer, invalid data
-        pass
-
+        for role in ['director', 'producer']:
+            # adds actor
+            actor = ActorPatchRepresentation(Actor(name=f'TestPostActor-{role}', gender='Male', birth_date='1979-01-01', nationality='Brazilian'))
+            res = self.client().post(f'/api/v1/actors', data=actor, headers=self.auth_headers[role])
+            data = json.loads(res.data)
+            self.assertEqual(res.status_code, 200)
+            # and removes it afterwards
+            res = self.client().delete(f'/api/v1/actors/{data["id"]}', headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 200)
+            
     def test_post_movie_not_authorized(self):
-        #fail for assistant
-        pass
+        for role in ['assistant', 'director']:
+            movie = MoviePatchRepresentation(Movie(title='FailedPostMovie', genre='Terror', release_date='1979-01-01'))
+            res = self.client().post(f'/api/v1/movies', data=movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 403)
   
     def test_post_movie(self):
-        # for director and producer
-        pass
+        role = 'producer'
+        # adds movie
+        movie = MoviePatchRepresentation(Movie(title=f'TestPostMovie-{role}', genre='Terror', release_date='1979-01-01'))
+        res = self.client().post(f'/api/v1/movies', data=movie, headers=self.auth_headers[role])
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        # and removes it afterwards
+        res = self.client().delete(f'/api/v1/movies/{data["id"]}', headers=self.auth_headers[role])
+        self.assertEqual(res.status_code, 200)
  
-    def test_post_movie_fail_invalid_data(self):
-        # for director OR producer, invalid data
-        pass
-
     def test_post_actor_movie_not_authorized(self):
-        pass
+        role = 'assistant'
+        actor_movie = ActorMovieRepresentation(ActorMovieAssociation(actor_id=99999, movie_id=99999, character_name='any'))
+        res = self.client().post(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+        self.assertEqual(res.status_code, 403)
     
     def test_post_actor_movie(self):
-        # for director and producer
-        pass
+        for role in ['director','producer']:
+            # add assoctiation
+            actor_movie = ActorMovieRepresentation(ActorMovieAssociation(actor_id=5, movie_id=4, character_name=f'test_post_actor_movie-{role}'))
+            res = self.client().post(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 200)
+            # and delete afterwards
+            res = self.client().delete(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 200)
  
     def test_post_actor_movie_invalid_actor(self):
-        # for director OR producer, invalid data
-        pass
+        for role in ['director','producer']:
+            actor_movie = ActorMovieRepresentation(ActorMovieAssociation(actor_id=999, movie_id=4, character_name=f'test_post_actor_movie-{role}'))
+            res = self.client().post(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 422)
     
     def test_post_actor_movie_invalid_movie(self):
-        # for director OR producer, invalid data
-        pass
+        for role in ['director','producer']:
+            actor_movie = ActorMovieRepresentation(ActorMovieAssociation(actor_id=1, movie_id=9999, character_name=f'test_post_actor_movie-{role}'))
+            res = self.client().post(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 422)
         
     #
     # DELETE
     #    
     def test_delete_actor_not_authorized(self):
-        #fail for assistant
-        pass
+        role = 'assistant'
+        res = self.client().get('/api/v1/actors', headers=self.auth_headers[role])
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        actor_id = data['actors'][0]['id']
+        res = self.client().delete(f'/api/v1/actors/{actor_id}', headers=self.auth_headers[role])
+        self.assertEqual(res.status_code, 403)  
        
     def test_delete_actor_not_found(self):
-         # for director and producer
-        pass      
+        for role in ['director', 'producer']:
+            res = self.client().delete(f'/api/v1/actors/999999', headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 404)  
 
     def test_delete_actor(self):
-         # for director and producer
-        pass          
+        for role in ['director', 'producer']:
+            # adds actor
+            actor = ActorPatchRepresentation(Actor(name=f'TestDeleteActor-{role}', gender='Male', birth_date='1979-01-01', nationality='Brazilian'))
+            res = self.client().post(f'/api/v1/actors', data=actor, headers=self.auth_headers[role])
+            data = json.loads(res.data)
+            self.assertEqual(res.status_code, 200)
+            # and removes it afterwards
+            res = self.client().delete(f'/api/v1/actors/{data["id"]}', headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 200)     
 
     def test_delete_movie_not_authorized(self):
-        #fail for assistant
-        pass
+        for role in ['assistant', 'director']:
+            res = self.client().get('/api/v1/movies', headers=self.auth_headers[role])
+            data = json.loads(res.data)
+            self.assertEqual(res.status_code, 200)
+            movie_id = data['movies'][0]['id']
+            res = self.client().delete(f'/api/v1/movies/{movie_id}', headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 403) 
        
     def test_delete_movie_not_found(self):
-         # for director and producer
-        pass      
+        role = 'producer'
+        res = self.client().delete(f'/api/v1/movies/999999', headers=self.auth_headers[role])
+        self.assertEqual(res.status_code, 404)     
 
     def test_delete_movie(self):
-         # for director and producer
-        pass
+        role = 'producer'
+        # adds movie
+        movie = MoviePatchRepresentation(Movie(title=f'TestDeleteMovie-{role}', genre='Terror', release_date='1979-01-01'))
+        res = self.client().post(f'/api/v1/movies', data=movie, headers=self.auth_headers[role])
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        # and removes it afterwards
+        res = self.client().delete(f'/api/v1/movies/{data["id"]}', headers=self.auth_headers[role])
+        self.assertEqual(res.status_code, 200)
 
     def test_delete_actor_movie_not_authorized(self):
-        pass
+        role = 'assistant'
+        actor_movie = ActorMovieRepresentation(ActorMovieAssociation(actor_id=99999, movie_id=99999, character_name='any'))
+        res = self.client().delete(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+        self.assertEqual(res.status_code, 403)
     
     def test_delete_actor_movie(self):
-        # for director and producer
-        pass
+        for role in ['director','producer']:
+            # add assoctiation
+            actor_movie = ActorMovieRepresentation(ActorMovieAssociation(actor_id=5, movie_id=4, character_name=f'test_delete_actor_movie-{role}'))
+            res = self.client().post(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 200)
+            # and delete afterwards
+            res = self.client().delete(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 200)
  
     def test_delete_actor_movie_invalid_actor(self):
-        # for director OR producer, invalid data
-        pass
+        for role in ['director','producer']:
+            actor_movie = ActorMovieRepresentation(ActorMovieAssociation(actor_id=999, movie_id=4, character_name=f'test_delete_actor_movie-{role}'))
+            res = self.client().delete(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 404)
     
     def test_delete_actor_movie_invalid_movie(self):
-        # for director OR producer, invalid data
-        pass
+        for role in ['director','producer']:
+            actor_movie = ActorMovieRepresentation(ActorMovieAssociation(actor_id=1, movie_id=9999, character_name=f'test_delete_actor_movie-{role}'))
+            res = self.client().delete(f'/api/v1/actor-movie', data=actor_movie, headers=self.auth_headers[role])
+            self.assertEqual(res.status_code, 404)
            
 #
 # Main
