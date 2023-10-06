@@ -34,7 +34,7 @@ The documentation can be browsed online at `http://localhost:5000/` once the ser
 
 ![Screenshot](images/openapi.png)
 
-The documentation page also provides an interface to test-drive the APIs.  Please refer to the [JWT](#JWT) section for information on where the obtain valid acccess tokens.
+The documentation page also provides an interface to test-drive the APIs.  Please refer to the [JWT](#JWT) section for information regarding acccess tokens.
 
 ## External Services
 
