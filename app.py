@@ -275,6 +275,34 @@ def create_app(test_config=None, auth_enabled=False):
             logger.error(e)
             abort(422)
 
+    #
+    # Error handlers
+    #
+    @app.errorhandler(400)
+    def bad_request(error):
+        return ErrorRepresentation('Bad request.'), 400
+
+    @app.errorhandler(401)
+    def unauthorized(error):
+        return ErrorRepresentation('Unauthorized.'), 401
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return ErrorRepresentation('Resource not found.'), 404
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return ErrorRepresentation('Processing of request failed.'), 422
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return ErrorRepresentation('Internal server error.'), 500
+
+    @app.errorhandler(AuthError)
+    def handle_auth_error(error):    
+        return ErrorRepresentation(f'Not authorized: {error.error_message}'), error.status_code
+    
+    
     return app
  
 
@@ -285,40 +313,8 @@ enable_auth_var = os.getenv('ENABLE_AUTH')
 auth_enabled = enable_auth_var is None or enable_auth_var != '0'
 
 #
-# App instance
-# 
-app = create_app(auth_enabled=auth_enabled)
-
-#
-# Error handlers
-#
-@app.errorhandler(400)
-def bad_request(error):
-    return ErrorRepresentation('Bad request.'), 400
-
-@app.errorhandler(401)
-def unauthorized(error):
-    return ErrorRepresentation('Unauthorized.'), 401
-
-@app.errorhandler(404)
-def not_found(error):
-    return ErrorRepresentation('Resource not found.'), 404
-
-@app.errorhandler(422)
-def unprocessable(error):
-    return ErrorRepresentation('Processing of request failed.'), 422
-
-@app.errorhandler(500)
-def internal_server_error(error):
-    return ErrorRepresentation('Internal server error.'), 500
-
-@app.errorhandler(AuthError)
-def handle_auth_error(error):    
-    return ErrorRepresentation(f'Not authorized: {error.error_message}'), error.status_code
-
-
-#
 # Main program
 # 
 if __name__ == '__main__':
+    app = create_app(auth_enabled=auth_enabled)
     app.run()

@@ -17,7 +17,7 @@ class Actor(Base):
     nationality = Column(String, unique=False)
     
     associations = relationship('ActorMovieAssociation', back_populates='actors')
-    movies = relationship('Movie', secondary=actor_movie_association, back_populates='actors')
+    movies = relationship('Movie', secondary=actor_movie_association, back_populates='actors', overlaps="actors, movies, associations")
     
             
     def __init__(self, name, gender, birth_date, nationality):

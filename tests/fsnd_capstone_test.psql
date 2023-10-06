@@ -1,0 +1,253 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.0 (Debian 16.0-1.pgdg120+1)
+-- Dumped by pg_dump version 16.0 (Debian 16.0-1.pgdg120+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: actor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.actor (
+    id integer NOT NULL,
+    name character varying,
+    gender character varying,
+    birth_date date,
+    nationality character varying
+);
+
+
+ALTER TABLE public.actor OWNER TO postgres;
+
+--
+-- Name: actor_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.actor_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.actor_id_seq OWNER TO postgres;
+
+--
+-- Name: actor_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.actor_id_seq OWNED BY public.actor.id;
+
+
+--
+-- Name: actor_movie_association; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.actor_movie_association (
+    actor_id integer NOT NULL,
+    movie_id integer NOT NULL,
+    character_name character varying NOT NULL
+);
+
+
+ALTER TABLE public.actor_movie_association OWNER TO postgres;
+
+--
+-- Name: movie; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.movie (
+    id integer NOT NULL,
+    title character varying,
+    genre character varying,
+    release_date date
+);
+
+
+ALTER TABLE public.movie OWNER TO postgres;
+
+--
+-- Name: movie_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.movie_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.movie_id_seq OWNER TO postgres;
+
+--
+-- Name: movie_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.movie_id_seq OWNED BY public.movie.id;
+
+
+--
+-- Name: actor id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor ALTER COLUMN id SET DEFAULT nextval('public.actor_id_seq'::regclass);
+
+
+--
+-- Name: movie id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movie ALTER COLUMN id SET DEFAULT nextval('public.movie_id_seq'::regclass);
+
+
+--
+-- Data for Name: actor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.actor (id, name, gender, birth_date, nationality) FROM stdin;
+1	Arnold Alois Schwarzenegger	Male	1947-07-30	Austrian-American
+2	Jason Clarke	Male	1969-07-17	Australian
+3	Emilia Isobel Euphemia Rose Clarke	Female	1986-10-23	British
+4	Matthew Robert Smith 	Male	1982-10-28	English
+5	Emma Zia D'Arcy	Female	1992-06-27	English
+6	Olivia Kate Cooke	Female	1993-12-27	English
+7	Fabien Frankel	Male	1994-04-06	English
+8	Angelina Jolie	Female	1975-06-04	American
+9	Richard Madden 	Male	1986-06-18	Scottish
+10	Kit Harington	Male	1986-12-26	English
+11	Peter Dinklage	Male	1969-05-11	American
+12	Margaret Constance Williams	Female	1997-04-15	English
+13	Lena Headey	Female	1973-10-03	British
+\.
+
+
+--
+-- Data for Name: actor_movie_association; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.actor_movie_association (actor_id, movie_id, character_name) FROM stdin;
+1	1	T800
+2	1	John Connor
+3	1	Sarah Connor
+4	1	Alex
+5	2	Rhaenyra Targaryen
+6	2	Alicent Hightower
+7	2	Criston Cole
+8	3	Thena
+9	3	Ikaris
+10	3	Dane Whitman
+10	4	Jon Snow
+11	4	Tyrion Lannister
+3	4	Daenerys Targaryen
+12	4	Arya Stark
+13	4	Cersei Lannister
+9	4	Robb Stark
+4	2	Daemon Targaryen
+\.
+
+
+--
+-- Data for Name: movie; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.movie (id, title, genre, release_date) FROM stdin;
+1	Terminator Genisys	Science Fiction	2015-01-07
+2	House Of The Dragon	Fantasy	2022-08-21
+3	Eternals	Science Fiction	2021-05-11
+4	Game Of Thrones	Fantasy	2011-04-17
+\.
+
+
+--
+-- Name: actor_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.actor_id_seq', 13, true);
+
+
+--
+-- Name: movie_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.movie_id_seq', 4, true);
+
+
+--
+-- Name: actor_movie_association actor_movie_association_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor_movie_association
+    ADD CONSTRAINT actor_movie_association_pkey PRIMARY KEY (actor_id, movie_id);
+
+
+--
+-- Name: actor actor_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor
+    ADD CONSTRAINT actor_name_key UNIQUE (name);
+
+
+--
+-- Name: actor actor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor
+    ADD CONSTRAINT actor_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: movie movie_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movie
+    ADD CONSTRAINT movie_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: movie movie_title_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movie
+    ADD CONSTRAINT movie_title_key UNIQUE (title);
+
+
+--
+-- Name: actor_movie_association actor_movie_association_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor_movie_association
+    ADD CONSTRAINT actor_movie_association_actor_id_fkey FOREIGN KEY (actor_id) REFERENCES public.actor(id);
+
+
+--
+-- Name: actor_movie_association actor_movie_association_movie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor_movie_association
+    ADD CONSTRAINT actor_movie_association_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES public.movie(id);
+
+
+--
+-- PostgreSQL database dump complete
+--

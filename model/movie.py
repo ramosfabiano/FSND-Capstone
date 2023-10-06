@@ -16,7 +16,7 @@ class Movie(Base):
     release_date = Column(Date, unique=False)
 
     associations = relationship('ActorMovieAssociation',back_populates='movies')
-    actors = relationship('Actor', secondary=actor_movie_association, back_populates='movies')
+    actors = relationship('Actor', secondary=actor_movie_association, back_populates='movies', overlaps="actors, movies, associations")
         
     def __init__(self, title, genre, release_date):
         """
