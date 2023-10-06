@@ -233,6 +233,9 @@ A couple of observations for the containerized execution:
 
 For submission purposes, we have deployed the application to the [Heroku](https://www.heroku.com/) cloud provider.
 
+For access tokens to be used for testing, please refer to the [JWT](#JWT) section.
+
+
 URL and info of how to run the application...
 
 This is an overview of the process...
