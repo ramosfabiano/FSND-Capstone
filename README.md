@@ -7,23 +7,23 @@ The objective of this capstone project is to showcase the skills learned during 
 
 In particular, we are implementing a *backend* , thus involving  data modelling, API design, role-based authentication/authorization, containerization and finally its deployment on a cloud platform.
 
-The context of this application is a "Casting Agency", an imaginary company that is responsible for creating and managing movies, actors, and their associations. We are then creating an API that allows manipulating the actors and movies database.
+The context of this application is a "Casting Agency", an imaginary company that is responsible for creating and managing movies, actors, and their associations.
 
 ## Technology Stack
 
-The application is developed in Python 3.10.12, using the  [Flask](http://flask.pocoo.org/) framework. 
+The application was developed in Python 3.10.12, using the [Flask](http://flask.pocoo.org/) framework. 
 
-The database system used is [PostgreSQL](https://www.postgresql.org/), along with [SQLAlchemy](https://www.sqlalchemy.org/) Object Relational Mapper (ORM).
+The database system used was [PostgreSQL](https://www.postgresql.org/), along with [SQLAlchemy](https://www.sqlalchemy.org/) Object Relational Mapper (ORM).
 
-[Flask-CORS](https://flask-cors.readthedocs.io/) is used to  handle cross origin requests.
+[Flask-CORS](https://flask-cors.readthedocs.io/) was used to  handle cross origin requests.
 
-For authentication/authorization, we use [Json Web Tokens - JWTs](https://datatracker.ietf.org/doc/html/rfc7519) as handled by the [Auth0](https://auth0.com/) authentication and identity management platform.
+For authentication/authorization, we used [Json Web Tokens - JWTs](https://datatracker.ietf.org/doc/html/rfc7519), managed by the [Auth0](https://auth0.com/) authentication and identity management platform.
 
-The API is documented using [OpenAPI/Swagger](https://swagger.io/).
+The API was documented using [OpenAPI/Swagger](https://swagger.io/).
 
-Optionally, [Docker](https://www.docker.com/) or [Podman](https://podman.io/) are required for running inside containers. They can be used interchangeably for this project.
+Optionally, [Podman](https://podman.io/) is required for containerized execution.
 
-Finally, we deploy our app on [Heroku](https://www.heroku.com/) Cloud platform.
+Finally, we deployed our app on the [Heroku](https://www.heroku.com/) Cloud platform.
 
 
 ## API Documentation
