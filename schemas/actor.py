@@ -51,6 +51,16 @@ class ActorPatchSchema(BaseModel):
     birth_date: str 
     nationality: str  
 
+def ActorPatchRepresentation(actor: Actor):
+    """ Returns the patch representation of an actor.
+    """    
+    return {
+        "name": actor.name,
+        "gender": actor.gender,
+        "birth_date": actor.birth_date,
+        "nationality": actor.nationality  
+    }
+        
 def ActorRepresentation(actor: Actor):
     """ Returns the representation of an actor.
     """    

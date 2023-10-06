@@ -44,7 +44,7 @@ def create_app():
     CORS(app, resources={r"/api/*": {"origins": "*"}})
             
     #
-    # Actors
+    # Documentation
     #
     @app.get('/', tags=[home_tag])
     def home():
@@ -68,21 +68,6 @@ def create_app():
         
         Returns a representation of the list of actors.
         """
-        '''
-        if auth_enabled:
-            token = request.headers.get("Authorization")
-            if token is None:
-                logger.error("No authorization token found.")
-                abort(401)
-            token = token.replace("Bearer ", "")
-            try:
-                payload = decode_jwt(token)
-                if payload is None:
-                    logger.error("Invalid token, no payload could be extracted.")
-                    abort(401)
-            except:
-                abort(401)
-        '''
         session = Session()
         actors = session.query(Actor).all()
         return ActorListRepresentation(actors), 200
@@ -104,7 +89,7 @@ def create_app():
             session.commit()
             return ActorRepresentation(actor), 200
         except Exception as e:
-            logger.error(e)
+            #logger.error(e)
             abort(422)
         
     @app.delete('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
@@ -126,7 +111,7 @@ def create_app():
             session.commit()
             return ActorRepresentation(actor), 200
         except Exception as e:
-            logger.error(e)
+            #logger.error(e)
             abort(422)
 
     @app.patch('/api/v1/actors/<int:id>', tags=[actors_tag], responses={"200": ActorViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
@@ -139,7 +124,7 @@ def create_app():
             form: actor's data.
         
         Returns a representation of the updated actor.
-        """
+        """        
         session = Session()
         actor = session.query(Actor).filter(Actor.id == path.id).first()
         if actor is None:
@@ -152,7 +137,7 @@ def create_app():
             session.commit()
             return ActorRepresentation(actor), 200
         except Exception as e:
-            logger.error(e)
+            #logger.error(e)
             abort(422)
 
     #
@@ -186,7 +171,7 @@ def create_app():
             session.commit()
             return MovieRepresentation(movie), 200
         except Exception as e:
-            logger.error(e)
+            #logger.error(e)
             abort(422)
 
     @app.delete('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
@@ -208,7 +193,7 @@ def create_app():
             session.commit()
             return MovieRepresentation(movie), 200
         except Exception as e:
-            logger.error(e)
+            #logger.error(e)
             abort(422)
 
     @app.patch('/api/v1/movies/<int:id>', tags=[movies_tag], responses={"200": MovieViewSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
@@ -233,7 +218,7 @@ def create_app():
             session.commit()
             return MovieRepresentation(movie), 200
         except Exception as e:
-            logger.error(e)
+            #logger.error(e)
             abort(422) 
 
     #
@@ -256,7 +241,7 @@ def create_app():
             session.commit()
             return ActorMovieRepresentation(actor_movie), 200
         except Exception as e:
-            logger.error(e)
+            #logger.error(e)
             abort(422)
 
     @app.delete('/api/v1/actor-movie', tags=[actor_movies_tag], responses={"200": ActorMovieSchema, "404": ErrorSchema, "422": ErrorSchema}, security=[{"jwt": []}] if auth_enabled else None)
@@ -278,7 +263,7 @@ def create_app():
             session.commit()            
             return ActorMovieRepresentation(actor_movie), 200
         except Exception as e:
-            logger.error(e)
+            #logger.error(e)
             abort(422)
 
     #
