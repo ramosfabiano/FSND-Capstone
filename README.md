@@ -245,7 +245,7 @@ root@a3d4770da7d3:/scripts# createdb -U postgres fsnd_capstone
 root@a3d4770da7d3:/scripts# psql -U postgres fsnd_capstone < fsnd_capstone.psql
 ```
 
-Opening a `psql`` session is also possible:
+Opening a `psql` session is also possible:
 
 ```bash
 podman-compose exec postgres psql -U postgres fsnd_capstone
