@@ -228,6 +228,29 @@ A couple of observations for the containerized execution option:
 * The environment variables are not read from `setup.sh`, but from `docker/*.env`. They are ingested automatically and do not require manual sourcing. Tip: if editing the `docker/*.env`, watch out for extra white spaces ;) 
 * The postgres container will keep its data files under `docker/postgres_data/`. This folder is automatically created and mounted inside the postgres container.
 
+The postgres container is set so that it will automatically load data if the database is uninitialized.
+
+Manually reinitilizing the database is also possible. First, make sure the app container is stopped:
+
+```bash
+podman-compose down app
+```
+
+Then open a terminal inside the container and load the database:
+
+```bash
+podman-compose exec postgres /bin/bash
+root@a3d4770da7d3:/scripts# dropdb -U postgres fsnd_capstone
+root@a3d4770da7d3:/scripts# createdb -U postgres fsnd_capstone
+root@a3d4770da7d3:/scripts# psql -U postgres fsnd_capstone < fsnd_capstone.psql
+```
+
+Opening a `psql`` session is also possible:
+
+```bash
+podman-compose exec postgres psql -U postgres fsnd_capstone
+fsnd_capstone=# select count(*) from actor;
+```
 
 ## Cloud Deployment
 
