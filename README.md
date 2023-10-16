@@ -5,7 +5,7 @@ Capstone Project in the Udacity Full Stack NanoDegree program.
 
 The objective of this capstone project is to showcase the skills learned during the course.
 
-In particular, we are implementing a *backend* , thus involving  data modelling, API design, role-based authentication/authorization, containerization and finally its deployment on a cloud platform.
+In particular, we are implementing (from scratch) a *backend* , thus involving  data modelling, API design, role-based authentication/authorization, containerization and finally its deployment on a cloud platform.
 
 The context of this application is a "Casting Agency", an imaginary company that is responsible for creating and managing movies, actors, and their associations.
 
