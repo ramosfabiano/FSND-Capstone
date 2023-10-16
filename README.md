@@ -200,6 +200,14 @@ Finally launch the tests:
 (venv) python -m unittest tests.test_app
 ```
 
+If a code coverage report is desired, run the tests using the `coverage` module instead:
+
+```bash
+(venv) coverage run --source=.  -m unittest tests.test_app
+(venv) coverage report -m
+(venv) coverage html
+```
+
 ### Containerized execution
 
 We offer an alternative way of running the application using docker/podman containers.
@@ -230,7 +238,7 @@ A couple of observations for the containerized execution option:
 
 The postgres container is set so that it will automatically load data if the database is uninitialized.
 
-Manually reinitilizing the database is also possible. First, make sure the app container is stopped:
+Manually resetting the database is also possible. First, make sure the app container is stopped:
 
 ```bash
 podman-compose down app
